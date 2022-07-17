@@ -32,6 +32,7 @@ func main() {
 	cad2 := "El veloz murcielago hindu comia feliz cardillo y kiwi"
 	fmt.Println(len(cad2))
 
-	//Slipt, divison de car
+	//Index, devuelve la posición de una cadena en un string
+	fmt.Println(strings.Index(ss, "mun"))
 
 }
