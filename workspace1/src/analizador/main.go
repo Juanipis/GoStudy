@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
 	fmt.Println("\"")
+	analizador.palabra = "hola"
+	fmt.Println(analizador.palabra)
 }

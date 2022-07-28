@@ -13,6 +13,7 @@ type token struct {
 
 var tablaSimbolos map[string][]string
 var tablaFinal [][]token
+var palabra string
 
 func crearMapa(path string) {
 	//Abre el archivo de entrada
