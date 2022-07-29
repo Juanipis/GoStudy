@@ -193,7 +193,8 @@ func main() {
 	wg.Wait()
 	//fmt.Println(tablaFinal)
 
-	final := []string{}
+	final := [][]string{}
+	final = append(final, []string{"NOMBRE", "LINEA", "# SIMBOLO EN FILA", "TIPO 1", "TIPO 2", "TIPO 3"})
 
 	for f, linea := range tablaFinal {
 		for c, token := range linea {
@@ -201,11 +202,19 @@ func main() {
 			for i, tipo := range token.typeToken {
 				tipos[i] = tipo
 			}
-			final = append(final, token.tokenName+","+strconv.Itoa(f)+","+strconv.Itoa(c)+","+tipos[0]+","+tipos[1]+","+tipos[2])
+			final = append(final, []string{token.tokenName, strconv.Itoa(f), strconv.Itoa(c), tipos[0], tipos[1], tipos[2]})
 		}
 	}
 
-	for _, linea := range final {
-		fmt.Println(linea)
+	csvFile, err := os.Create("AnalizadorLexicoGrafico.csv")
+	if err != nil {
+		fmt.Println(err)
 	}
+
+	csvwriter := csv.NewWriter(csvFile)
+	for _, linea := range final {
+		csvwriter.Write(linea)
+	}
+	csvwriter.Flush()
+	csvFile.Close()
 }
