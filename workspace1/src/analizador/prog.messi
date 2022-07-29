@@ -1,8 +1,10 @@
+@messi+$cr7=gol
 package main
 import (
 "fmt"
 )
 <!Este es un codigo en Messi!>
 fun main() {
-i = 3;
+int i = 3;
+i+
 }

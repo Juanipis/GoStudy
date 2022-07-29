@@ -70,7 +70,7 @@ loop:
 			fmt.Println("Rompiendo el bucle externo")
 			break loop
 		}
-		fmt.Println("Esto nunca se imprimirá en pantalla")
+		//fmt.Println("Esto nunca se imprimirá en pantalla")
 	}
 
 	//Defer, se ejecuta al finalizar el programa

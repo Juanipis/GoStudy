@@ -1,61 +1,61 @@
-﻿;,2,
-;,2,
-<!,6,2
-!>,6,2
-!,2,
- ,2,
-(,2,
-),2,
-{,2,
-},2,
-[,2,
-],2,
-\n,2,
-\r,2,
-\,2,
-',2,
-if,7,5
-else,7,5
-elif,7,5
-lever,7,5
-while,8,5
-for,8,5
-break,8,5
-continue,8,5
-case,8,5
-char,9,5
-int,9,5
-dec,9,5
-string,9,5
-bool,9,5
-const,5,
-null,5,
-throws,5,
-throw,5,
-try,5,
-catch,5,
-import,5,
-feka,5,
-real,5,
-package,5,
-return,5,
-func,5,
-main,5,
-+,1,2
--,1,2
-*,1,2
-/,1,2
-%,1,2
-^,1,2
-¬,1,2
-:^,1,2
-<,3,2
->,3,2
-<=,3,2
->=,3,2
-!=,3,2
-=,3,2
-==,3,2
-and,4,5
-or,4,5
-not,4,5
+﻿;,Separador,,
+;,Separador,,
+<!,6,Separador,
+!>,6,Separador,
+!,Separador,,
+ ,Separador,,
+(,Separador,,
+),Separador,,
+{,Separador,,
+},Separador,,
+[,Separador,,
+],Separador,,
+\n,Separador,,
+\r,Separador,,
+\,Separador,,
+',Separador,,
+if,Comentarios,Palabra reservada,
+else,Comentarios,Palabra reservada,
+elif,Comentarios,Palabra reservada,
+lever,Comentarios,Palabra reservada,
+while,Control de flujo,Palabra reservada,
+for,Control de flujo,Palabra reservada,
+break,Control de flujo,Palabra reservada,
+continue,Control de flujo,Palabra reservada,
+case,Control de flujo,Palabra reservada,
+char,Tipo de dato,Palabra reservada,
+int,Tipo de dato,Palabra reservada,
+dec,Tipo de dato,Palabra reservada,
+string,Tipo de dato,Palabra reservada,
+bool,Tipo de dato,Palabra reservada,
+const,Palabra reservada,,
+null,Palabra reservada,,
+throws,Palabra reservada,,
+throw,Palabra reservada,,
+try,Palabra reservada,,
+catch,Palabra reservada,,
+import,Palabra reservada,,
+feka,Palabra reservada,,
+real,Palabra reservada,,
+package,Palabra reservada,,
+return,Palabra reservada,,
+func,Palabra reservada,,
+main,Palabra reservada,,
++,Aritmetico,Separador,
+-,Aritmetico,Separador,
+*,Aritmetico,Separador,
+/,Aritmetico,Separador,
+%,Aritmetico,Separador,
+^,Aritmetico,Separador,
+¬,Aritmetico,Separador,
+:^,Aritmetico,Separador,
+<,Relacional,Separador,
+>,Relacional,Separador,
+<=,Relacional,Separador,
+>=,Relacional,Separador,
+!=,Relacional,Separador,
+=,Relacional,Separador,
+==,Relacional,Separador,
+and,Logico,Palabra reservada,
+or,Logico,Palabra reservada,
+not,Logico,Palabra reservada,
