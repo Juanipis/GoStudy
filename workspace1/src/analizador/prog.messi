@@ -1,0 +1,8 @@
+package main
+import (
+"fmt"
+)
+<!Este es un codigo en Messi!>
+fun main() {
+i = 3;
+}
