@@ -5,7 +5,6 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
-	"time"
 )
 
 type token struct {
@@ -28,7 +27,6 @@ func crearMapa(path string, tablaSimbolos map[string][]string) {
 	if error != nil {
 		fmt.Println(error)
 	}
-
 	// Crea el mapa de tokens
 	for _, lista := range records {
 		if lista[2] == "" {
@@ -55,9 +53,8 @@ func leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaFi
 				caracterSiguiente := string(linea[i+1])
 				_, isSeparator := tablaSimbolos[caracterActual+caracterSiguiente]
 				if isSeparator {
-					fmt.Println(caracterActual + caracterSiguiente)
 					caracterActual = caracterActual + caracterSiguiente
-					i = i + 2
+					i = i + 1
 				}
 			}
 			//Revisa si el stringAuxToken acumulado es un simbolo de la tabla
@@ -77,6 +74,12 @@ func leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaFi
 			//No encontro un separador, lo concatena al stringAuxToken y sigue leyendo
 			stringAuxToken += caracterActual
 		}
+	}
+	typeTokenTemp, isReserved := tablaSimbolos[stringAuxToken]
+	if isReserved && stringAuxToken != "" {
+		lineaEvaluar = append(lineaEvaluar, token{stringAuxToken, typeTokenTemp})
+	} else if stringAuxToken != "" {
+		lineaEvaluar = append(lineaEvaluar, token{stringAuxToken, []string{"0"}})
 	}
 	//Al terminar de recorrer la linea añade el conjunto de tokens a la tabla de
 	tablaFinal[numlinea] = lineaEvaluar
@@ -129,10 +132,11 @@ func main() {
 	fileScanner := bufio.NewScanner(archivo)
 	i := 0
 	for fileScanner.Scan() {
-		go leer(fileScanner.Text(), i, tablaSimbolos, tablaFinal)
+		leer(fileScanner.Text(), i, tablaSimbolos, tablaFinal)
 		i++
 	}
-	time.Sleep(5 * time.Second)
-	fmt.Println(tablaFinal)
 
+	for _, linea := range tablaFinal {
+		fmt.Println(linea)
+	}
 }
