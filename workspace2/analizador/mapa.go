@@ -1,14 +1,38 @@
 package analizador
 
 import (
+	"bufio"
 	"encoding/csv"
 	"fmt"
+	"log"
 	"os"
+	"strings"
 )
 
 type Token struct {
 	TokenName string
 	TypeToken []string
+}
+
+func CrearMapa2(path string, tablaSimbolos map[string][]string) {
+	file, err := os.Open(path)
+
+	if err != nil {
+		log.Fatalf("Error abriendo archivo : %s", err)
+	}
+
+	fileScanner := bufio.NewScanner(file)
+
+	for fileScanner.Scan() {
+		lista := strings.Split(fileScanner.Text(), ",")
+		if lista[3] != "" {
+			tablaSimbolos[lista[0]] = []string{lista[1], lista[2], lista[3]}
+		} else if lista[2] != "" {
+			tablaSimbolos[lista[0]] = []string{lista[1], lista[2]}
+		} else {
+			tablaSimbolos[lista[0]] = []string{lista[1]}
+		}
+	}
 }
 
 func CrearMapa(path string, tablaSimbolos map[string][]string) {
