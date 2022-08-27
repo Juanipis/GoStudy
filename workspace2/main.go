@@ -6,15 +6,17 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"sync"
 	analizador "workspace2/analizador"
 )
 
 func main() {
+	tablatokens := []analizador.TablaTokens{}
 	//Crear mapa de lectura
 	tablaSimbolos := make(map[string][]string)
 	//Se llama a la funcion que lee el el csv con los simbolos y crea el mapa de lectura
-	analizador.CrearMapa("TablaSimbolos.csv", tablaSimbolos)
+	analizador.CrearMapa2("TablaSimbolos.csv", tablaSimbolos)
+	tablaCorrespondencia := make(map[string]string)
+	analizador.CrearMapaCorrespondencia("TablaCorrespondencia.csv", tablaCorrespondencia)
 
 	//Se ingresa el codigo fuente a analizar
 	nombreArchivo := "prog.messi"
@@ -36,16 +38,11 @@ func main() {
 	i := 0
 
 	//Se lee el archivo linea a linea enviando al metodo leer
-	//Para usar subrutinas creamos un sync
-	var wg sync.WaitGroup
 
 	for fileScanner.Scan() {
-		wg.Add(1)
-		go analizador.Leer(fileScanner.Text(), i, tablaSimbolos, tablaIntermedia, &wg)
+		analizador.Leer(fileScanner.Text(), i, tablaSimbolos, tablaIntermedia, tablaCorrespondencia, tablatokens)
 		i++
 	}
-
-	wg.Wait()
 
 	//Se creará la tabla que se exportara como csv
 	final := [][]string{}

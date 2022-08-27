@@ -14,6 +14,12 @@ type Token struct {
 	TypeToken []string
 }
 
+type TablaTokens struct {
+	Token           string
+	IdToken         int
+	LexemaGenerador string
+}
+
 func CrearMapa2(path string, tablaSimbolos map[string][]string) {
 	file, err := os.Open(path)
 
@@ -32,6 +38,19 @@ func CrearMapa2(path string, tablaSimbolos map[string][]string) {
 		} else {
 			tablaSimbolos[lista[0]] = []string{lista[1]}
 		}
+	}
+}
+
+func CrearMapaCorrespondencia(path string, tablaCorrespondencia map[string]string) {
+	file, err := os.Open(path)
+	if err != nil {
+		log.Fatalf("Error abriendo archivo : %s", err)
+	}
+	fileScanner := bufio.NewScanner(file)
+
+	for fileScanner.Scan() {
+		lista := strings.Split(fileScanner.Text(), ",")
+		tablaCorrespondencia[lista[0]] = lista[1]
 	}
 }
 

@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"sync"
 )
 
-func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIntermedia [][]Token, wg *sync.WaitGroup) {
+func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIntermedia [][]Token, tablaCorrespondencia map[string]string, tablatokens []TablaTokens) {
 	var stringAcumulado string
 	//La linea a evaluar es un array de Tokens, los Tokens tienen un nombre y un array de tipos
 	lineaEvaluar := []Token{}
@@ -35,7 +34,7 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 				typeTokenTemp, isReserved := tablaSimbolos[stringAcumulado]
 				if isReserved {
 					//Si es un simbolo reservado, lo añade a la tabla de Tokens con su respectivo tipo
-					lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, typeTokenTemp})
+					lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, ConversionTypeSimbolo(typeTokenTemp, tablaCorrespondencia)})
 				} else {
 					//Si el primer caracter del stringAcumulado es un arroba, significa que es una constante.
 					if strings.HasPrefix(stringAcumulado, "@") {
@@ -52,7 +51,7 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 
 			stringAcumulado = ""
 			//Añade el separador a la tabla de Tokens con su respectivo tipo
-			lineaEvaluar = append(lineaEvaluar, Token{caracterActual, tipoSeparador})
+			lineaEvaluar = append(lineaEvaluar, Token{caracterActual, ConversionTypeSimbolo(tipoSeparador, tablaCorrespondencia)})
 		} else {
 			//No encontro un separador, lo concatena al stringAcumulado y sigue evaluando la linea actual
 			stringAcumulado += caracterActual
@@ -63,7 +62,7 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 	if stringAcumulado != "" {
 		typeTokenTemp, isReserved := tablaSimbolos[stringAcumulado]
 		if isReserved {
-			lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, typeTokenTemp})
+			lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, ConversionTypeSimbolo(typeTokenTemp, tablaCorrespondencia)})
 		} else {
 			if strings.HasPrefix(stringAcumulado, "@") {
 				lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador", "Constante"}})
@@ -76,8 +75,17 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 	}
 	//Al terminar de recorrer la linea añade el conjunto de Tokens a la tabla final
 	tablaIntermedia[numlinea] = lineaEvaluar
+}
 
-	wg.Done()
+func ConversionTypeSimbolo(tiposSimbolo []string, tablaCorrespondencia map[string]string) []string {
+	valorReal := []string{}
+	for i := 0; i < len(tiposSimbolo); i++ {
+		tiposSimbolo, isPresent := tablaCorrespondencia[tiposSimbolo[i]]
+		if isPresent {
+			valorReal = append(valorReal, tiposSimbolo)
+		}
+	}
+	return valorReal
 }
 
 func ContadorLineas(nombreArchivo string) int {
