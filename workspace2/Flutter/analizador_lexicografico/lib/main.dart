@@ -57,10 +57,10 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           bool validRoute = await dialogOpen(context);
-          print(validRoute);
           if (validRoute) {
+            circularProgress(context);
             List<Tabla1Data> tabal1DataAct = await generateTabla1List();
-            print(tabal1DataAct);
+            Navigator.pop(context);
             setState(() {
               tabla1Cells = tabal1DataAct;
             });
