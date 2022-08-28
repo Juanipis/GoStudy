@@ -32,6 +32,7 @@ class HomeAnalizador extends StatefulWidget {
 
 class _HomeAnalizadorState extends State<HomeAnalizador> {
   List<Tabla1Data> tabla1Cells = [];
+  List<Tabla2Data> tabla2Cells = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +50,7 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
               children: [const Text("Tabla 1"), tablaLexico(tabla1Cells)],
             ),
             Column(
-              children: [const Text("Tabla 2"), tablaTokens()],
+              children: [const Text("Tabla 2"), tablaTokens(tabla2Cells)],
             ),
           ],
         ),
@@ -59,10 +60,22 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
           bool validRoute = await dialogOpen(context);
           if (validRoute) {
             circularProgress(context);
-            List<Tabla1Data> tabal1DataAct = await generateTabla1List();
+            List<Tabla1Data> tabla1 = [];
+            List<Tabla2Data> tabla2 = [];
+            var url = Uri.https('api.npoint.io', '/e305395fbcf20817bfa2');
+            var response = await http.get(url);
+            Map<String, dynamic> decode = json.decode(response.body);
+            //print(decode["tabla1"].runtimeType);
+            for (dynamic tableElement in decode["tabla1"]) {
+              tabla1.add(Tabla1Data.fromJson(tableElement));
+            }
+            for (dynamic tableElement in decode["tabla2"]) {
+              tabla2.add(Tabla2Data.fromJson(tableElement));
+            }
             Navigator.pop(context);
             setState(() {
-              tabla1Cells = tabal1DataAct;
+              tabla1Cells = tabla1;
+              tabla2Cells = tabla2;
             });
           }
         },
@@ -94,18 +107,20 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
             .toList());
   }
 
-  tablaTokens() {
-    return DataTable(columns: const <DataColumn>[
-      DataColumn(label: Text("Token")),
-      DataColumn(label: Text("#IdToken")),
-      DataColumn(label: Text("Lexema generador")),
-    ], rows: const <DataRow>[
-      DataRow(cells: <DataCell>[
-        DataCell(Text("Hola")),
-        DataCell(Text("Mundo")),
-        DataCell(Text("Mundo"))
-      ])
-    ]);
+  tablaTokens(List<Tabla2Data> tabla2) {
+    return DataTable(
+        columns: const <DataColumn>[
+          DataColumn(label: Text("Token")),
+          DataColumn(label: Text("#IdToken")),
+          DataColumn(label: Text("Lexema generador")),
+        ],
+        rows: tabla2
+            .map((item) => DataRow(cells: [
+                  DataCell(Text(item.token)),
+                  DataCell(Text(item.idToken)),
+                  DataCell(Text(item.lexema))
+                ]))
+            .toList());
   }
 }
 
@@ -153,7 +168,10 @@ Future<bool> dialogOpen(BuildContext context) async {
                       if (formKey.currentState!.validate()) {
                         final isValidRuta = await File(ruta.text).exists();
                         if (isValidRuta) {
-                          validRoute = true;
+                          int statusCode = await sendFile(ruta.text);
+                          if (statusCode == 200) {
+                            validRoute = true;
+                          }
                           navState.pop();
                         } else {
                           navState.pop();
@@ -197,14 +215,10 @@ Future<bool> validarArchivo(String value) async {
   return await File(value).exists();
 }
 
-Future<List<Tabla1Data>> generateTabla1List() async {
-  List<Tabla1Data> tabla1 = [];
-  var url = Uri.https('api.npoint.io', '/e305395fbcf20817bfa2');
-  var response = await http.get(url);
-  Map<String, dynamic> decode = json.decode(response.body);
-  //print(decode["tabla1"].runtimeType);
-  for (dynamic tableElement in decode["tabla1"]) {
-    tabla1.add(Tabla1Data.fromJson(tableElement));
-  }
-  return tabla1;
+Future<int> sendFile(String rute) async {
+  Uri url = Uri.parse("https://ptsv2.com/t/8s3mm-1661656071");
+  var request = http.MultipartRequest('POST', url);
+  request.files.add(await http.MultipartFile.fromPath("file", rute));
+  var response = await request.send();
+  return response.statusCode;
 }
