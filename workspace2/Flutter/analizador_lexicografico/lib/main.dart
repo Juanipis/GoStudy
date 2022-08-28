@@ -144,7 +144,7 @@ Future<bool> dialogOpen(BuildContext context) async {
       context: context,
       builder: ((context) {
         return AlertDialog(
-          title: const Text("Abir archivo"),
+          title: const Text("Abrir archivo"),
           actions: [
             Form(
                 key: formKey,
@@ -172,7 +172,7 @@ Future<bool> dialogOpen(BuildContext context) async {
                         ruta.text = file.path;
                       } else {}
                     },
-                    child: const Text("Abir")),
+                    child: const Text("Abrir")),
                 TextButton(
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
