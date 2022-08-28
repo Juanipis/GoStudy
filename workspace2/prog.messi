@@ -7,22 +7,22 @@ import (
 )
 
 func main() {
-	const int @diasSemana = 7
-	const int @diasMes = 31
+	const int @diasSemana = $7
+	const int @diasMes = $31
 	var int $horasSemana
-	$horasSemana = (7*24)+1-1
+	$horasSemana = ($7*$24)+$1-$1
 	fmt.Println("Los dias de la semana son:" + @diasSemana)
 	fmt.Println("Las horas de una semana son:" + $horasSemana)
-	if (@diasSemana = 8) {
-		fmt.Println("ERROR, los dias de la semana son 8")
+	if (@diasSemana = $8) {
+		fmt.Println("ERROR, los dias de la semana son $8")
 	}	else	{
 		fmt.Println("Estas en lo correcto")
 	}
 	var int [] $almacenamiento 
-	for(int $i = 0, $i <= 10, i++) {
+	for(int $i = $0, $i <= $10, i++) {
 		$almacenamiento.append($almacenamiento , i)
 	}
-	fmt.Println($almacenamiento[3])
+	fmt.Println($almacenamiento[$3])
 	if(real and feka){
 		fmt.Println("Estas equivocado")
 	}

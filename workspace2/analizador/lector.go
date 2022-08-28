@@ -39,11 +39,11 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 					//Si el primer caracter del stringAcumulado es un arroba, significa que es una constante.
 					if strings.HasPrefix(stringAcumulado, "@") {
 						lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador", "Constante"}})
-						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"SimboloConstante", len(tablaTokensGenerada), stringAcumulado})
+						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorConstante", len(tablaTokensGenerada), stringAcumulado})
 						//Si el primer caracter del stringAcumulado es un simbolo de pesos, significa que es una variable.
 					} else if strings.HasPrefix(stringAcumulado, "$") {
 						lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador", "Variable"}})
-						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"SimboloVariable", len(tablaTokensGenerada), stringAcumulado})
+						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorVariable", len(tablaTokensGenerada), stringAcumulado})
 						//Si no cumple ninguno de los dos anteriores, se clasifica como identificador unicamente.
 					} else {
 						lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador"}})
@@ -70,10 +70,10 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 		} else {
 			if strings.HasPrefix(stringAcumulado, "@") {
 				lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador", "Constante"}})
-				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"SimboloConstante", len(tablaTokensGenerada), stringAcumulado})
+				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorConstante", len(tablaTokensGenerada), stringAcumulado})
 			} else if strings.HasPrefix(stringAcumulado, "$") {
 				lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador", "Variable"}})
-				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"SimboloVariable", len(tablaTokensGenerada), stringAcumulado})
+				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorVariable", len(tablaTokensGenerada), stringAcumulado})
 			} else {
 				lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador"}})
 				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"Identificador", len(tablaTokensGenerada), stringAcumulado})
