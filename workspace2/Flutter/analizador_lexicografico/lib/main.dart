@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:ffi';
+
+import 'package:analizador_lexicografico/table_elements.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const Analizador());
@@ -26,6 +31,7 @@ class HomeAnalizador extends StatefulWidget {
 }
 
 class _HomeAnalizadorState extends State<HomeAnalizador> {
+  List<Tabla1Data> tabla1Cells = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +46,7 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
           runSpacing: 4.0,
           children: <Widget>[
             Column(
-              children: [const Text("Tabla 1"), tablaLexico()],
+              children: [const Text("Tabla 1"), tablaLexico(tabla1Cells)],
             ),
             Column(
               children: [const Text("Tabla 2"), tablaTokens()],
@@ -50,13 +56,15 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          dialogOpen(context);
-          /*
-          FilePickerResult? result = await FilePicker.platform.pickFiles();
-          if (result != null) {
-            File file = File(result.files.single.path!);
-            print(file.path);
-          } else {}*/
+          bool validRoute = await dialogOpen(context);
+          print(validRoute);
+          if (validRoute) {
+            List<Tabla1Data> tabal1DataAct = await generateTabla1List();
+            print(tabal1DataAct);
+            setState(() {
+              tabla1Cells = tabal1DataAct;
+            });
+          }
         },
         backgroundColor: Colors.blue,
         child: const Icon(Icons.add),
@@ -64,24 +72,26 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
     );
   }
 
-  tablaLexico() {
-    return DataTable(columns: const <DataColumn>[
-      DataColumn(label: Text("Nombre")),
-      DataColumn(label: Text("Linea")),
-      DataColumn(label: Text("Columna")),
-      DataColumn(label: Text("Tipo 1")),
-      DataColumn(label: Text("Tipo 2")),
-      DataColumn(label: Text("Tipo 3"))
-    ], rows: const <DataRow>[
-      DataRow(cells: <DataCell>[
-        DataCell(Text("Hola")),
-        DataCell(Text("Mundo")),
-        DataCell(Text("Mundo")),
-        DataCell(Text("Mundo")),
-        DataCell(Text("Mundo")),
-        DataCell(Text("Mundo"))
-      ])
-    ]);
+  tablaLexico(List<Tabla1Data> tabla1) {
+    return DataTable(
+        columns: const <DataColumn>[
+          DataColumn(label: Text("Nombre")),
+          DataColumn(label: Text("Linea")),
+          DataColumn(label: Text("Columna")),
+          DataColumn(label: Text("Tipo 1")),
+          DataColumn(label: Text("Tipo 2")),
+          DataColumn(label: Text("Tipo 3"))
+        ],
+        rows: tabla1
+            .map((item) => DataRow(cells: [
+                  DataCell(Text(item.nombre)),
+                  DataCell(Text(item.linea)),
+                  DataCell(Text(item.columna)),
+                  DataCell(Text(item.tipo1)),
+                  DataCell(Text(item.tipo2)),
+                  DataCell(Text(item.tipo3)),
+                ]))
+            .toList());
   }
 
   tablaTokens() {
@@ -99,12 +109,13 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
   }
 }
 
-void dialogOpen(BuildContext context) {
+Future<bool> dialogOpen(BuildContext context) async {
   NavigatorState navState = Navigator.of(context);
   TextEditingController ruta = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  bool validRoute = false;
 
-  showDialog(
+  await showDialog(
       context: context,
       builder: ((context) {
         return AlertDialog(
@@ -140,11 +151,10 @@ void dialogOpen(BuildContext context) {
                 TextButton(
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
-                        navState.pop();
-                        circularProgress(context);
                         final isValidRuta = await File(ruta.text).exists();
                         if (isValidRuta) {
-                          requestApiTables();
+                          validRoute = true;
+                          navState.pop();
                         } else {
                           navState.pop();
                           archivoNoEncontrado(context);
@@ -157,6 +167,7 @@ void dialogOpen(BuildContext context) {
           ],
         );
       }));
+  return validRoute;
 }
 
 Future<dynamic> archivoNoEncontrado(
@@ -186,4 +197,14 @@ Future<bool> validarArchivo(String value) async {
   return await File(value).exists();
 }
 
-void requestApiTables() {}
+Future<List<Tabla1Data>> generateTabla1List() async {
+  List<Tabla1Data> tabla1 = [];
+  var url = Uri.https('api.npoint.io', '/e305395fbcf20817bfa2');
+  var response = await http.get(url);
+  Map<String, dynamic> decode = json.decode(response.body);
+  //print(decode["tabla1"].runtimeType);
+  for (dynamic tableElement in decode["tabla1"]) {
+    tabla1.add(Tabla1Data.fromJson(tableElement));
+  }
+  return tabla1;
+}
