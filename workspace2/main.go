@@ -10,13 +10,15 @@ import (
 )
 
 func main() {
-	tablatokens := []analizador.TablaTokens{}
+	tabla2 := []analizador.TablaTokens{}
 	//Crear mapa de lectura
 	tablaSimbolos := make(map[string][]string)
 	//Se llama a la funcion que lee el el csv con los simbolos y crea el mapa de lectura
 	analizador.CrearMapa2("TablaSimbolos.csv", tablaSimbolos)
 	tablaCorrespondencia := make(map[string]string)
 	analizador.CrearMapaCorrespondencia("TablaCorrespondencia.csv", tablaCorrespondencia)
+	Mapatokens := make(map[string]string)
+	analizador.CrearMapaTokens("TablaTokens.csv", Mapatokens)
 
 	//Se ingresa el codigo fuente a analizar
 	nombreArchivo := "prog.messi"
@@ -40,7 +42,7 @@ func main() {
 	//Se lee el archivo linea a linea enviando al metodo leer
 
 	for fileScanner.Scan() {
-		analizador.Leer(fileScanner.Text(), i, tablaSimbolos, tablaIntermedia, tablaCorrespondencia, tablatokens)
+		tabla2 = analizador.Leer(fileScanner.Text(), i, tablaSimbolos, tablaIntermedia, tablaCorrespondencia, tabla2, Mapatokens)
 		i++
 	}
 
@@ -55,6 +57,9 @@ func main() {
 			//Se agrega simbolo en la linea f y posicion c a la tabla final con su respectiva posicion y tipos
 			final = append(final, []string{token.TokenName, strconv.Itoa(f), strconv.Itoa(c), tipos[0], tipos[1], tipos[2]})
 		}
+	}
+	for _, elemento := range tabla2 {
+		fmt.Println(elemento)
 	}
 
 	//Se exporta la tabla final como csv

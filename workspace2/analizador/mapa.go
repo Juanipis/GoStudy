@@ -54,6 +54,18 @@ func CrearMapaCorrespondencia(path string, tablaCorrespondencia map[string]strin
 	}
 }
 
+func CrearMapaTokens(path string, tablaTokens map[string]string) {
+	file, err := os.Open(path)
+	if err != nil {
+		log.Fatalf("Error abriendo archivo: %s", err)
+	}
+	fileScanner := bufio.NewScanner(file)
+	for fileScanner.Scan() {
+		lista := strings.Split(fileScanner.Text(), ",")
+		tablaTokens[lista[0]] = lista[1]
+	}
+}
+
 func CrearMapa(path string, tablaSimbolos map[string][]string) {
 	fd, error := os.Open(path)
 	if error != nil {
