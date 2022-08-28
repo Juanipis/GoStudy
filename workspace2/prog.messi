@@ -1,9 +1,9 @@
 <!Este es un codigo en el lenguaje de programacion Messi!>
 package main
 import (
-		#fmt#
-		#gol#
-		#hinchas#
+	#fmt#
+	#gol#
+	#hinchas#
 )
 
 func main() {
