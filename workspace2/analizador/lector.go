@@ -54,9 +54,7 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 			stringAcumulado = ""
 			//Añade el separador a la tabla de Tokens con su respectivo tipo
 			lineaEvaluar = append(lineaEvaluar, Token{caracterActual, ConversionTypeSimbolo(tipoSeparador, tablaCorrespondencia)})
-			//tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{ObtencionToken(stringAcumulado, tablatokens), len(tablaTokensGenerada), stringAcumulado})
-			test := TablaTokens{ObtencionToken(caracterActual, tablatokens), len(tablaTokensGenerada), caracterActual}
-			tablaTokensGenerada = append(tablaTokensGenerada, test)
+			tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{ObtencionToken(caracterActual, tablatokens), len(tablaTokensGenerada), caracterActual})
 		} else {
 			//No encontro un separador, lo concatena al stringAcumulado y sigue evaluando la linea actual
 			stringAcumulado += caracterActual

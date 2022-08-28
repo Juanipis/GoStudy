@@ -66,6 +66,7 @@ func CrearMapaTokens(path string, tablaTokens map[string]string) {
 	}
 }
 
+////////////////////////////////////////////////////////////////
 func CrearMapa(path string, tablaSimbolos map[string][]string) {
 	fd, error := os.Open(path)
 	if error != nil {
