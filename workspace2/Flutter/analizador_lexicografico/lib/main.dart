@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:analizador_lexicografico/table_elements.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -44,13 +42,25 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
         child: Wrap(
           alignment: WrapAlignment.center,
           spacing: 200,
-          runSpacing: 4.0,
+          runSpacing: 50.0,
           children: <Widget>[
             Column(
-              children: [const Text("Tabla 1"), tablaLexico(tabla1Cells)],
+              children: [
+                const Text(
+                  "Tabla 1",
+                  style: TextStyle(fontSize: 25),
+                ),
+                tablaLexico(tabla1Cells)
+              ],
             ),
             Column(
-              children: [const Text("Tabla 2"), tablaTokens(tabla2Cells)],
+              children: [
+                const Text(
+                  "Tabla 2",
+                  style: TextStyle(fontSize: 25),
+                ),
+                tablaTokens(tabla2Cells)
+              ],
             ),
           ],
         ),
