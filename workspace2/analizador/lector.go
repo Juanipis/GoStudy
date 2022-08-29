@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIntermedia [][]Token, tablaCorrespondencia map[string]string, tablaTokensGenerada []TablaTokens, tablatokens map[string]string) []TablaTokens {
+func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIntermedia [][]Token, tablaCorrespondencia map[string]string, tablaTokensGenerada []TablaTokens, tablatokens map[string][]string) []TablaTokens {
 	var stringAcumulado string
 	//La linea a evaluar es un array de Tokens, los Tokens tienen un nombre y un array de tipos
 	lineaEvaluar := []Token{}
@@ -34,20 +34,21 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 				if isReserved {
 					//Si es un simbolo reservado, lo añade a la tabla de Simbolos con su respectivos tipos
 					lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, ConversionTypeSimbolo(typeTokenTemp, tablaCorrespondencia)})
-					tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{ObtencionToken(stringAcumulado, tablatokens), len(tablaTokensGenerada), stringAcumulado})
+					aux := ObtencionToken(stringAcumulado, tablatokens)
+					tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{aux[0], aux[1], stringAcumulado})
 				} else {
 					//Si el primer caracter del stringAcumulado es un arroba, significa que es una constante.
 					if strings.HasPrefix(stringAcumulado, "@") {
 						lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador", "Constante"}})
-						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorConstante", len(tablaTokensGenerada), stringAcumulado})
+						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorConstante", ExistenciaToken(stringAcumulado, tablaTokensGenerada, len(tablatokens)), stringAcumulado})
 						//Si el primer caracter del stringAcumulado es un simbolo de pesos, significa que es una variable.
 					} else if strings.HasPrefix(stringAcumulado, "$") {
 						lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador", "Variable"}})
-						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorVariable", len(tablaTokensGenerada), stringAcumulado})
+						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorVariable", ExistenciaToken(stringAcumulado, tablaTokensGenerada, len(tablatokens)), stringAcumulado})
 						//Si no cumple ninguno de los dos anteriores, se clasifica como identificador unicamente.
 					} else {
 						lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador"}})
-						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"Identificador", len(tablaTokensGenerada), stringAcumulado})
+						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"Identificador", ExistenciaToken(stringAcumulado, tablaTokensGenerada, len(tablatokens)), stringAcumulado})
 					}
 				}
 			}
@@ -59,7 +60,7 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 						stringAcumulado += "!>"
 						i += 2
 						lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Comentario"}})
-						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"Comentario", len(tablaTokensGenerada), stringAcumulado})
+						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"Comentario", generarId(tablaTokensGenerada, len(tablatokens)), stringAcumulado})
 						break
 					} else {
 						stringAcumulado += string(linea[i])
@@ -69,7 +70,8 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 				stringAcumulado = ""
 			} else {
 				lineaEvaluar = append(lineaEvaluar, Token{caracterActual, ConversionTypeSimbolo(tipoSeparador, tablaCorrespondencia)})
-				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{ObtencionToken(caracterActual, tablatokens), len(tablaTokensGenerada), caracterActual})
+				aux := ObtencionToken(stringAcumulado, tablatokens)
+				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{aux[0], aux[1], caracterActual})
 			}
 			//Añade el separador a la tabla de Tokens con su respectivo tipo
 		} else {
@@ -83,17 +85,18 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 		typeTokenTemp, isReserved := tablaSimbolos[stringAcumulado]
 		if isReserved {
 			lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, ConversionTypeSimbolo(typeTokenTemp, tablaCorrespondencia)})
-			tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{ObtencionToken(stringAcumulado, tablatokens), len(tablaTokensGenerada), stringAcumulado})
+			aux := ObtencionToken(stringAcumulado, tablatokens)
+			tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{aux[0], aux[1], stringAcumulado})
 		} else {
 			if strings.HasPrefix(stringAcumulado, "@") {
 				lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador", "Constante"}})
-				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorConstante", len(tablaTokensGenerada), stringAcumulado})
+				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorConstante", ExistenciaToken(stringAcumulado, tablaTokensGenerada, len(tablatokens)), stringAcumulado})
 			} else if strings.HasPrefix(stringAcumulado, "$") {
 				lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador", "Variable"}})
-				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorVariable", len(tablaTokensGenerada), stringAcumulado})
+				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorVariable", ExistenciaToken(stringAcumulado, tablaTokensGenerada, len(tablatokens)), stringAcumulado})
 			} else {
 				lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador"}})
-				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"Identificador", len(tablaTokensGenerada), stringAcumulado})
+				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"Identificador", ExistenciaToken(stringAcumulado, tablaTokensGenerada, len(tablatokens)), stringAcumulado})
 			}
 		}
 	}
@@ -112,13 +115,34 @@ func ConversionTypeSimbolo(tiposSimbolo []string, tablaCorrespondencia map[strin
 	}
 	return valorReal
 }
-func ObtencionToken(lexema string, tablatokens map[string]string) string {
+func ObtencionToken(lexema string, tablatokens map[string][]string) []string {
 	token, isPresent := tablatokens[lexema]
 	if isPresent {
 		return token
 	} else {
-		return ""
+		return []string{"Error"}
 	}
+}
+
+func ExistenciaToken(lexema string, tablaTokens []TablaTokens, i int) string {
+	existe := false
+	var id string
+	for Token := range tablaTokens {
+		if lexema == tablaTokens[Token].LexemaGenerador {
+			existe = true
+			id = tablaTokens[Token].IdToken
+			break
+		}
+	}
+	if existe {
+		return id
+	} else {
+		return generarId(tablaTokens, i)
+	}
+}
+
+func generarId(tablaTokens []TablaTokens, i int) string {
+	return string(len(tablaTokens) + i)
 }
 
 func ContadorLineas(nombreArchivo string) int {
