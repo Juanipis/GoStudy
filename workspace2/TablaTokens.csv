@@ -10,6 +10,7 @@
 [,CorcheteIzq
 ],CorcheteDer
 :,DosPuntos
+;,PuntoYComa
 .,Punto
 #,Numeral
 \n,SaltoLinea
@@ -47,9 +48,7 @@ return,Return
 func,Func
 main,Main
 +,Suma
-++,Incremento
 -,Resta
---,Decremento
 *,Multiplicacion
 /,Division
 %,Modulo
