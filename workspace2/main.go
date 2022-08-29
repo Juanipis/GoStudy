@@ -58,10 +58,11 @@ func main() {
 			final = append(final, []string{token.TokenName, strconv.Itoa(f), strconv.Itoa(c), tipos[0], tipos[1], tipos[2]})
 		}
 	}
-	analizador.RAritmetica(tabla2)
-	/*for _, elemento := range tabla2 {
-		fmt.Println(elemento)
-	}*/
+
+	analizador.RAritmetico(final)
+	// for _, elemento := range tabla2 {
+	// 	fmt.Println(elemento)
+	// }
 
 	//Se exporta la tabla final como csv
 	csvFile, err := os.Create("AnalizadorLexicoGrafico.csv")
