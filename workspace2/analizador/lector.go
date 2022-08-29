@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -35,7 +36,7 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 					//Si es un simbolo reservado, lo añade a la tabla de Simbolos con su respectivos tipos
 					lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, ConversionTypeSimbolo(typeTokenTemp, tablaCorrespondencia)})
 					aux := ObtencionToken(stringAcumulado, tablatokens)
-					tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{aux[0], aux[1], stringAcumulado})
+					tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{aux[1], aux[0], stringAcumulado})
 				} else {
 					//Si el primer caracter del stringAcumulado es un arroba, significa que es una constante.
 					if strings.HasPrefix(stringAcumulado, "@") {
@@ -71,7 +72,7 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 			} else {
 				lineaEvaluar = append(lineaEvaluar, Token{caracterActual, ConversionTypeSimbolo(tipoSeparador, tablaCorrespondencia)})
 				aux := ObtencionToken(stringAcumulado, tablatokens)
-				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{aux[0], aux[1], caracterActual})
+				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{aux[1], aux[0], caracterActual})
 			}
 			//Añade el separador a la tabla de Tokens con su respectivo tipo
 		} else {
@@ -86,7 +87,7 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 		if isReserved {
 			lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, ConversionTypeSimbolo(typeTokenTemp, tablaCorrespondencia)})
 			aux := ObtencionToken(stringAcumulado, tablatokens)
-			tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{aux[0], aux[1], stringAcumulado})
+			tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{aux[1], aux[0], stringAcumulado})
 		} else {
 			if strings.HasPrefix(stringAcumulado, "@") {
 				lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador", "Constante"}})
@@ -120,7 +121,7 @@ func ObtencionToken(lexema string, tablatokens map[string][]string) []string {
 	if isPresent {
 		return token
 	} else {
-		return []string{"Error"}
+		return []string{"Error", "err"}
 	}
 }
 
@@ -142,7 +143,7 @@ func ExistenciaToken(lexema string, tablaTokens []TablaTokens, i int) string {
 }
 
 func generarId(tablaTokens []TablaTokens, i int) string {
-	return string(len(tablaTokens) + i)
+	return strconv.Itoa(len(tablaTokens) + i)
 }
 
 func ContadorLineas(nombreArchivo string) int {

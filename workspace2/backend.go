@@ -97,7 +97,7 @@ func getTable1() []analizador.FinalSimbol {
 	//Se llama a la funcion que lee el el csv con la correspondencia a tipos y crea el mapa de lectura de correspondencia
 	analizador.CrearMapaCorrespondencia("TablaCorrespondencia.csv", tablaCorrespondencia)
 	//Crear mapa de lectura tokens
-	Mapatokens := make(map[string]string)
+	Mapatokens := make(map[string][]string)
 	//Se llama a la funcion que lee el el csv con la correspondencia a tipos y crea el mapa de tokens
 	analizador.CrearMapaTokens("TablaTokens.csv", Mapatokens)
 
@@ -154,7 +154,7 @@ func getTable2() []analizador.TablaTokens {
 	//Se llama a la funcion que lee el el csv con la correspondencia a tipos y crea el mapa de lectura de correspondencia
 	analizador.CrearMapaCorrespondencia("TablaCorrespondencia.csv", tablaCorrespondencia)
 	//Crear mapa de lectura tokens
-	Mapatokens := make(map[string]string)
+	Mapatokens := make(map[string][]string)
 	//Se llama a la funcion que lee el el csv con la correspondencia a tipos y crea el mapa de tokens
 	analizador.CrearMapaTokens("TablaTokens.csv", Mapatokens)
 
@@ -198,7 +198,7 @@ func getTable3() []analizador.AritemticaStruct {
 	//Se llama a la funcion que lee el el csv con la correspondencia a tipos y crea el mapa de lectura de correspondencia
 	analizador.CrearMapaCorrespondencia("TablaCorrespondencia.csv", tablaCorrespondencia)
 	//Crear mapa de lectura tokens
-	Mapatokens := make(map[string]string)
+	Mapatokens := make(map[string][]string)
 	//Se llama a la funcion que lee el el csv con la correspondencia a tipos y crea el mapa de tokens
 	analizador.CrearMapaTokens("TablaTokens.csv", Mapatokens)
 
