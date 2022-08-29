@@ -10,7 +10,7 @@ func main() {
 	const int @diasSemana = $7
 	const int @diasMes = $31
 	var int $horasSemana
-	$horasSemana = $7*$24+((@1-@1)
+	$horasSemana = $7*$24+@1-@1)
 	fmt.Println("Los dias de la semana son:" ; @diasSemana)
 	fmt.Println("Las horas de una semana son:" ; $horasSemana)
 	@diasSemana = ($a+@b)+($c+(@d + $e))+($f+@g)
@@ -20,7 +20,7 @@ func main() {
 		fmt.Println("Estas en lo correcto")
 	}
 	var int [] $almacenamiento 
-	for(int $i = $0; $i <= $10; $i=$i+@1) {
+	for (int $i = $0; $i <= $10; $i=$i+@1) {
 		$almacenamiento.append($almacenamiento , i)
 	}
 	fmt.Println($almacenamiento[$3])
