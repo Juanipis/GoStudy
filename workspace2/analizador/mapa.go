@@ -20,7 +20,9 @@ type TablaTokens struct {
 	LexemaGenerador string
 }
 
+//Metodo que crea una escructura de tipo map para el csv de TablaSimbolos
 func CrearMapa2(path string, tablaSimbolos map[string][]string) {
+	//Apertura del archivo y busqueda de errores
 	file, err := os.Open(path)
 
 	if err != nil {
@@ -29,6 +31,7 @@ func CrearMapa2(path string, tablaSimbolos map[string][]string) {
 
 	fileScanner := bufio.NewScanner(file)
 
+	//Se escanea cada uno de los elementos del csv y se separan por comas para el map.
 	for fileScanner.Scan() {
 		lista := strings.Split(fileScanner.Text(), ",")
 		if lista[3] != "" {
@@ -41,25 +44,32 @@ func CrearMapa2(path string, tablaSimbolos map[string][]string) {
 	}
 }
 
+//Metodo que crea una escructura de tipo map para el csv de TablaCorrespondencia
 func CrearMapaCorrespondencia(path string, tablaCorrespondencia map[string]string) {
+	//Apertura del archivo y busqueda de errores
 	file, err := os.Open(path)
 	if err != nil {
 		log.Fatalf("Error abriendo archivo : %s", err)
 	}
 	fileScanner := bufio.NewScanner(file)
 
+	//Se escanea cada uno de los elementos del csv y se separan por comas para el map.
 	for fileScanner.Scan() {
 		lista := strings.Split(fileScanner.Text(), ",")
 		tablaCorrespondencia[lista[0]] = lista[1]
 	}
 }
 
+//Metodo que crea una estructura de tipo map para el csv de TablaTokens
 func CrearMapaTokens(path string, tablaTokens map[string]string) {
+	//Apertura del archivo y busqueda de errores
 	file, err := os.Open(path)
 	if err != nil {
 		log.Fatalf("Error abriendo archivo: %s", err)
 	}
 	fileScanner := bufio.NewScanner(file)
+
+	//Se escanea cada uno de los elementos del csv y se separan por comas para el map.
 	for fileScanner.Scan() {
 		lista := strings.Split(fileScanner.Text(), ",")
 		tablaTokens[lista[0]] = lista[1]
