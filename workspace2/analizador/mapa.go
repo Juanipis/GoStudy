@@ -25,6 +25,18 @@ type TablaTokens struct {
 	LexemaGenerador string
 }
 
+/*Generacion de estructura para manejo de la tabla de simbolos que surge del analisis.
+Se compone de aquellos datos asociados a las columnas (Tabla1) que van a ser visibles en el programa
+*/
+type FinalSimbol struct {
+	Nombre      string `json:"name"`
+	Linea       string `json:"line"`
+	NumSimbFila string `json:"numSimbFila"`
+	T1          string `json:"t1"`
+	T2          string `json:"t2"`
+	T3          string `json:"t3"`
+}
+
 //Metodo que crea una escructura de tipo map para el csv de TablaSimbolos
 func CrearMapaSimbolos(path string, tablaSimbolos map[string][]string) {
 	//Apertura del archivo y busqueda de errores
