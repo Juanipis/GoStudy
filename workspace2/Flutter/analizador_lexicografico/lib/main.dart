@@ -34,13 +34,13 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
   List<Tabla1Data> tabla1Cells = [];
   List<Tabla2Data> tabla2Cells = [];
   List<TablaAritmetica> tabla3Cells = [];
-
+  /*
   @override
   void initState() {
     super.initState();
     var shell = Shell();
     shell.run('''./workspace2''');
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -178,7 +178,7 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
         rows: tabla2
             .map((item) => DataRow(cells: [
                   DataCell(Text(item.token)),
-                  DataCell(Text(item.idToken.toString())),
+                  DataCell(Text(item.idToken)),
                   DataCell(Text(item.lexema))
                 ]))
             .toList());

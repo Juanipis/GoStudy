@@ -29,7 +29,7 @@ class Tabla1Data {
 
 class Tabla2Data {
   final String token;
-  final int idToken;
+  final String idToken;
   final String lexema;
 
   Tabla2Data(this.token, this.idToken, this.lexema);
