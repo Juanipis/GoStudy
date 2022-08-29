@@ -4,6 +4,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:flutter_window_close/flutter_window_close.dart';
+import 'package:process_run/shell.dart';
+import 'package:process_run/which.dart';
 
 void main() {
   runApp(const Analizador());
@@ -32,11 +35,35 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
   List<Tabla1Data> tabla1Cells = [];
   List<Tabla2Data> tabla2Cells = [];
   List<TablaAritmetica> tabla3Cells = [];
+
+  @override
+  void initState() {
+    super.initState();
+    var shell = Shell();
+    shell.run('''./workspace2''');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Analizador Lexicografico"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  tabla1Cells = [];
+                  tabla2Cells = [];
+                  tabla3Cells = [];
+                });
+              },
+              icon: const Icon(Icons.delete)),
+          IconButton(
+              onPressed: () {
+                FlutterWindowClose.closeWindow();
+              },
+              icon: const Icon(Icons.logout))
+        ],
       ),
       body: SingleChildScrollView(
         child: SizedBox(
