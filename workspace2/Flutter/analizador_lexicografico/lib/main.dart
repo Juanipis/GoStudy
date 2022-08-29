@@ -2,11 +2,10 @@ import 'dart:convert';
 import 'package:analizador_lexicografico/table_elements.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:process_run/shell.dart';
-import 'package:process_run/which.dart';
 
 void main() {
   runApp(const Analizador());
@@ -60,7 +59,9 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
               icon: const Icon(Icons.delete)),
           IconButton(
               onPressed: () {
-                FlutterWindowClose.closeWindow();
+                var shell = Shell();
+                shell.run('''killall workspace2''');
+                SystemNavigator.pop();
               },
               icon: const Icon(Icons.logout))
         ],
