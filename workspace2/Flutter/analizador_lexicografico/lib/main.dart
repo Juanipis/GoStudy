@@ -37,32 +37,34 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
       appBar: AppBar(
         title: const Text("Analizador Lexicografico"),
       ),
-      body: SizedBox(
-        width: double.infinity,
-        child: Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 200,
-          runSpacing: 50.0,
-          children: <Widget>[
-            Column(
-              children: [
-                const Text(
-                  "Tabla 1",
-                  style: TextStyle(fontSize: 25),
-                ),
-                tablaLexico(tabla1Cells)
-              ],
-            ),
-            Column(
-              children: [
-                const Text(
-                  "Tabla 2",
-                  style: TextStyle(fontSize: 25),
-                ),
-                tablaTokens(tabla2Cells)
-              ],
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: SizedBox(
+          width: double.infinity,
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 200,
+            runSpacing: 50.0,
+            children: <Widget>[
+              Column(
+                children: [
+                  const Text(
+                    "Tabla 1",
+                    style: TextStyle(fontSize: 25),
+                  ),
+                  tablaLexico(tabla1Cells)
+                ],
+              ),
+              Column(
+                children: [
+                  const Text(
+                    "Tabla 2",
+                    style: TextStyle(fontSize: 25),
+                  ),
+                  tablaTokens(tabla2Cells)
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -72,14 +74,16 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
             circularProgress(context);
             List<Tabla1Data> tabla1 = [];
             List<Tabla2Data> tabla2 = [];
-            var url = Uri.https('api.npoint.io', '/e305395fbcf20817bfa2');
-            var response = await http.get(url);
-            Map<String, dynamic> decode = json.decode(response.body);
-            //print(decode["tabla1"].runtimeType);
-            for (dynamic tableElement in decode["tabla1"]) {
+            Uri url1 = Uri.parse("http://localhost:8001/tabla1");
+            var response = await http.get(url1);
+            List<dynamic> decode = json.decode(response.body);
+            for (dynamic tableElement in decode) {
               tabla1.add(Tabla1Data.fromJson(tableElement));
             }
-            for (dynamic tableElement in decode["tabla2"]) {
+            Uri url2 = Uri.parse("http://localhost:8001/tabla2");
+            var response2 = await http.get(url2);
+            List<dynamic> decode2 = json.decode(response2.body);
+            for (dynamic tableElement in decode2) {
               tabla2.add(Tabla2Data.fromJson(tableElement));
             }
             Navigator.pop(context);
@@ -127,7 +131,7 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
         rows: tabla2
             .map((item) => DataRow(cells: [
                   DataCell(Text(item.token)),
-                  DataCell(Text(item.idToken)),
+                  DataCell(Text(item.idToken.toString())),
                   DataCell(Text(item.lexema))
                 ]))
             .toList());
@@ -182,6 +186,7 @@ Future<bool> dialogOpen(BuildContext context) async {
                           if (statusCode == 200) {
                             validRoute = true;
                           }
+                          validRoute = true;
                           navState.pop();
                         } else {
                           navState.pop();
@@ -226,7 +231,7 @@ Future<bool> validarArchivo(String value) async {
 }
 
 Future<int> sendFile(String rute) async {
-  Uri url = Uri.parse("https://ptsv2.com/t/8s3mm-1661656071");
+  Uri url = Uri.parse("http://localhost:8001/file");
   var request = http.MultipartRequest('POST', url);
   request.files.add(await http.MultipartFile.fromPath("file", rute));
   var response = await request.send();

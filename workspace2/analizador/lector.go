@@ -7,15 +7,6 @@ import (
 	"strings"
 )
 
-type finalSimbol struct {
-	Nombre      string
-	Linea       string
-	NumSimbFila string
-	t1          string
-	t2          string
-	t3          string
-}
-
 func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIntermedia [][]Token, tablaCorrespondencia map[string]string, tablaTokensGenerada []TablaTokens, tablatokens map[string]string) []TablaTokens {
 	var stringAcumulado string
 	//La linea a evaluar es un array de Tokens, los Tokens tienen un nombre y un array de tipos

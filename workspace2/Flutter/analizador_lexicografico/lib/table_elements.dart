@@ -10,35 +10,35 @@ class Tabla1Data {
       this.tipo3);
 
   Tabla1Data.fromJson(Map<String, dynamic> json)
-      : nombre = json['nombre'],
-        linea = json['linea'],
-        columna = json['columna'],
-        tipo1 = json['tipo1'],
-        tipo2 = json['tipo2'],
-        tipo3 = json['tipo3'];
+      : nombre = json['name'],
+        linea = json['line'],
+        columna = json['numSimbFila'],
+        tipo1 = json['t1'],
+        tipo2 = json['t2'],
+        tipo3 = json['t3'];
 
   Map<String, dynamic> toJson() => {
-        'nombre': nombre,
-        'linea': linea,
-        'columna': columna,
-        'tipo1': tipo1,
-        'tipo2': tipo2,
-        'tipo3': tipo3
+        'name': nombre,
+        'line': linea,
+        'numSimbFila': columna,
+        't1': tipo1,
+        't2': tipo2,
+        't3': tipo3
       };
 }
 
 class Tabla2Data {
   final String token;
-  final String idToken;
+  final int idToken;
   final String lexema;
 
   Tabla2Data(this.token, this.idToken, this.lexema);
 
   Tabla2Data.fromJson(Map<String, dynamic> json)
-      : token = json['token'],
-        idToken = json['idToken'],
-        lexema = json['lexema'];
+      : token = json['Token'],
+        idToken = json['IdToken'],
+        lexema = json['LexemaGenerador'];
 
   Map<String, dynamic> toJson() =>
-      {'token': token, 'idToken': idToken, 'lexema': lexema};
+      {'Token': token, 'IdToken': idToken, 'LexemaGenerador': lexema};
 }
