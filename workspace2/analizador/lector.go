@@ -52,10 +52,26 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 				}
 			}
 			stringAcumulado = ""
-
+			if caracterActual == "<!" {
+				stringAcumulado += "<"
+				for i < len(linea) {
+					if string(linea[i]) == "!" && i < len(linea)-1 && string(linea[i+1]) == ">" {
+						stringAcumulado += "!>"
+						i += 2
+						lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Comentario"}})
+						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"Comentario", len(tablaTokensGenerada), stringAcumulado})
+						break
+					} else {
+						stringAcumulado += string(linea[i])
+						i++
+					}
+				}
+				stringAcumulado = ""
+			} else {
+				lineaEvaluar = append(lineaEvaluar, Token{caracterActual, ConversionTypeSimbolo(tipoSeparador, tablaCorrespondencia)})
+				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{ObtencionToken(caracterActual, tablatokens), len(tablaTokensGenerada), caracterActual})
+			}
 			//Añade el separador a la tabla de Tokens con su respectivo tipo
-			lineaEvaluar = append(lineaEvaluar, Token{caracterActual, ConversionTypeSimbolo(tipoSeparador, tablaCorrespondencia)})
-			tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{ObtencionToken(caracterActual, tablatokens), len(tablaTokensGenerada), caracterActual})
 		} else {
 			//No encontro un separador, lo concatena al stringAcumulado y sigue evaluando la linea actual
 			stringAcumulado += caracterActual
@@ -120,4 +136,8 @@ func ContadorLineas(nombreArchivo string) int {
 		fmt.Println(err)
 	}
 	return contadorLineas
+}
+
+func leerComentarios() {
+
 }
