@@ -14,7 +14,7 @@ func RAritmetico(tabla [][]string) {
 	}
 }
 
-func filter(tabla [][]string, pos int, linea string) string {
+func filter(tabla [][]string, pos int, linea string) []string {
 	for {
 		in := false
 		pos--
@@ -32,6 +32,7 @@ func filter(tabla [][]string, pos int, linea string) string {
 			break
 		}
 	}
+	posI := tabla[pos][2]
 	var lineaCodigo string
 	for {
 		in := false
@@ -41,11 +42,17 @@ func filter(tabla [][]string, pos int, linea string) string {
 			}
 		}
 		if !in && !(tabla[pos][0] == "(" || tabla[pos][0] == ")" || tabla[pos][0] == " ") {
-			pos++
+			if string(lineaCodigo[len(lineaCodigo)-1]) == " " {
+				lineaCodigo = lineaCodigo[:len(lineaCodigo)-1]
+				pos = pos - 2
+			} else {
+				pos--
+			}
 			break
 		}
 		lineaCodigo = lineaCodigo + tabla[pos][0]
 		pos++
 	}
-	return lineaCodigo
+	posF := tabla[pos][2]
+	return []string{lineaCodigo, linea, posI, posF}
 }
