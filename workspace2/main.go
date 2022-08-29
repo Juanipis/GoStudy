@@ -9,6 +9,15 @@ import (
 	analizador "workspace2/analizador"
 )
 
+type finalSimbol struct {
+	Nombre      string
+	Linea       string
+	NumSimbFila string
+	t1          string
+	t2          string
+	t3          string
+}
+
 func main() {
 	tabla2 := []analizador.TablaTokens{}
 	//Crear mapa de lectura
@@ -50,12 +59,15 @@ func main() {
 	final := [][]string{}
 	final = append(final, []string{"NOMBRE", "LINEA", "# SIMBOLO EN FILA", "TIPO 1", "TIPO 2", "TIPO 3"})
 
+	final2 := []finalSimbol{}
+
 	for f, linea := range tablaIntermedia {
 		for c, token := range linea {
 			var tipos [4]string
 			copy(tipos[:], token.TypeToken)
 			//Se agrega simbolo en la linea f y posicion c a la tabla final con su respectiva posicion y tipos
 			final = append(final, []string{token.TokenName, strconv.Itoa(f), strconv.Itoa(c), tipos[0], tipos[1], tipos[2]})
+			final2 = append(final2, finalSimbol{token.TokenName, strconv.Itoa(f), strconv.Itoa(c), tipos[0], tipos[1], tipos[2]})
 		}
 	}
 
