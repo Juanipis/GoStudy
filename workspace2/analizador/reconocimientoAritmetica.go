@@ -1,20 +1,25 @@
 package analizador
 
-import (
-	"fmt"
-)
+type AritemticaStruct struct {
+	Expresion  string `json:"exp"`
+	Linea      string `json:"linea"`
+	SimInicial string `json:"simInicio"`
+	SimFinal   string `json:"simFinal"`
+}
 
-func RAritmetico(tabla [][]string) {
+func RAritmetico(tabla [][]string) []AritemticaStruct {
 	var linea string
+	var tablaAritmetica []AritemticaStruct
 	for i := 0; i < len(tabla); i++ {
 		if tabla[i][3] == "Operador aritmetico" && tabla[i][1] != linea {
 			linea = tabla[i][1]
-			fmt.Println(filter(tabla, i, linea))
+			tablaAritmetica = append(tablaAritmetica, filter(tabla, i, linea))
 		}
 	}
+	return tablaAritmetica
 }
 
-func filter(tabla [][]string, pos int, linea string) []string {
+func filter(tabla [][]string, pos int, linea string) AritemticaStruct {
 	for {
 		in := false
 		pos--
@@ -54,5 +59,6 @@ func filter(tabla [][]string, pos int, linea string) []string {
 		pos++
 	}
 	posF := tabla[pos][2]
-	return []string{lineaCodigo, linea, posI, posF}
+
+	return AritemticaStruct{lineaCodigo, linea, posI, posF}
 }

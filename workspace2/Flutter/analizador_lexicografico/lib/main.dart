@@ -31,6 +31,7 @@ class HomeAnalizador extends StatefulWidget {
 class _HomeAnalizadorState extends State<HomeAnalizador> {
   List<Tabla1Data> tabla1Cells = [];
   List<Tabla2Data> tabla2Cells = [];
+  List<TablaAritmetica> tabla3Cells = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,6 +64,15 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
                   tablaTokens(tabla2Cells)
                 ],
               ),
+              Column(
+                children: [
+                  const Text(
+                    "Tabla 3",
+                    style: TextStyle(fontSize: 25),
+                  ),
+                  tablaAritmetica(tabla3Cells)
+                ],
+              ),
             ],
           ),
         ),
@@ -74,6 +84,7 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
             circularProgress(context);
             List<Tabla1Data> tabla1 = [];
             List<Tabla2Data> tabla2 = [];
+            List<TablaAritmetica> tabla3 = [];
             Uri url1 = Uri.parse("http://localhost:8001/tabla1");
             var response = await http.get(url1);
             List<dynamic> decode = json.decode(response.body);
@@ -86,10 +97,18 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
             for (dynamic tableElement in decode2) {
               tabla2.add(Tabla2Data.fromJson(tableElement));
             }
+
+            Uri url3 = Uri.parse("http://localhost:8001/tabla3");
+            var response3 = await http.get(url3);
+            List<dynamic> decode3 = json.decode(response3.body);
+            for (dynamic tableElement in decode3) {
+              tabla3.add(TablaAritmetica.fromJson(tableElement));
+            }
             Navigator.pop(context);
             setState(() {
               tabla1Cells = tabla1;
               tabla2Cells = tabla2;
+              tabla3Cells = tabla3;
             });
           }
         },
@@ -133,6 +152,24 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
                   DataCell(Text(item.token)),
                   DataCell(Text(item.idToken.toString())),
                   DataCell(Text(item.lexema))
+                ]))
+            .toList());
+  }
+
+  tablaAritmetica(List<TablaAritmetica> tabla3) {
+    return DataTable(
+        columns: const <DataColumn>[
+          DataColumn(label: Text("Expresion")),
+          DataColumn(label: Text("#Linea")),
+          DataColumn(label: Text("#Simbolo Inicio")),
+          DataColumn(label: Text("#Simbolo Final")),
+        ],
+        rows: tabla3
+            .map((item) => DataRow(cells: [
+                  DataCell(Text(item.expresion)),
+                  DataCell(Text(item.linea)),
+                  DataCell(Text(item.simboloInicio)),
+                  DataCell(Text(item.simboloFinal))
                 ]))
             .toList());
   }

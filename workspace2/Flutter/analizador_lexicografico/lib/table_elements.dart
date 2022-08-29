@@ -42,3 +42,26 @@ class Tabla2Data {
   Map<String, dynamic> toJson() =>
       {'Token': token, 'IdToken': idToken, 'LexemaGenerador': lexema};
 }
+
+class TablaAritmetica {
+  final String expresion;
+  final String linea;
+  final String simboloInicio;
+  final String simboloFinal;
+
+  TablaAritmetica(
+      this.expresion, this.linea, this.simboloInicio, this.simboloFinal);
+
+  TablaAritmetica.fromJson(Map<String, dynamic> json)
+      : expresion = json['exp'],
+        linea = json['linea'],
+        simboloInicio = json['simInicio'],
+        simboloFinal = json['simFinal'];
+
+  Map<String, dynamic> toJson() => {
+        'exp': expresion,
+        'linea': linea,
+        'simInicio': simboloInicio,
+        'simFinal': simboloFinal
+      };
+}
