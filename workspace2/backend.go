@@ -84,7 +84,7 @@ func getTable1() []finalSimbol {
 	//Crear mapa de lectura
 	tablaSimbolos := make(map[string][]string)
 	//Se llama a la funcion que lee el el csv con los simbolos y crea el mapa de lectura
-	analizador.CrearMapa2("TablaSimbolos.csv", tablaSimbolos)
+	analizador.CrearMapaSimbolos("TablaSimbolos.csv", tablaSimbolos)
 	tablaCorrespondencia := make(map[string]string)
 	analizador.CrearMapaCorrespondencia("TablaCorrespondencia.csv", tablaCorrespondencia)
 	Mapatokens := make(map[string]string)
@@ -131,7 +131,7 @@ func getTable2() []analizador.TablaTokens {
 	//Crear mapa de lectura
 	tablaSimbolos := make(map[string][]string)
 	//Se llama a la funcion que lee el el csv con los simbolos y crea el mapa de lectura
-	analizador.CrearMapa2("TablaSimbolos.csv", tablaSimbolos)
+	analizador.CrearMapaSimbolos("TablaSimbolos.csv", tablaSimbolos)
 	tablaCorrespondencia := make(map[string]string)
 	analizador.CrearMapaCorrespondencia("TablaCorrespondencia.csv", tablaCorrespondencia)
 	Mapatokens := make(map[string]string)
@@ -167,7 +167,7 @@ func getTable3() []analizador.AritemticaStruct {
 	//Crear mapa de lectura
 	tablaSimbolos := make(map[string][]string)
 	//Se llama a la funcion que lee el el csv con los simbolos y crea el mapa de lectura
-	analizador.CrearMapa2("TablaSimbolos.csv", tablaSimbolos)
+	analizador.CrearMapaSimbolos("TablaSimbolos.csv", tablaSimbolos)
 	tablaCorrespondencia := make(map[string]string)
 	analizador.CrearMapaCorrespondencia("TablaCorrespondencia.csv", tablaCorrespondencia)
 	Mapatokens := make(map[string]string)
