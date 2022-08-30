@@ -8,16 +8,29 @@ import (
 	"strings"
 )
 
-/*Metodo principal para el analizador lexicografico
-Funcionalidad: lectura del codigo fuente que se envia por ruta.
-Valor de retorno: La tabla de tokens luego del analisis.
-Parametros: linea: corresponde a aquella del archivo a ser analizada.
-numlinea: identifica el numero de la linea con la que se esta trabajando.
-tablaSimbolos: mapa que ayuda a saber si tenemos un simbolo reservado o no.
-tablaIntermedia: aquella que se genera con todos los simbolos evaluados del archivo.
-tablaCorrespondencia: mapa que ayuda a identificar el significado de los numeros que se encuentran en tipo del simbolo.
-tablaTokensGenerada: tabla que se devuelve en el metodo con token, idToken y lexema.
-tablatokens: mapa que ayuda a conseguir el token a partir del lexema (simbolo).
+/* Function: Leer
+
+   Se encarga de la lectura del codigo fuente con el que se alimenta el programa. Genera una tabla intermedia para la tabla final de simbolos y la tabla final de tokens.
+
+   Parameters:
+
+      linea - corresponde a aquella del archivo a ser analizada.
+      numlinea - identifica el numero de la linea con la que se esta trabajando.
+	  tablaSimbolos - mapa que ayuda a saber si tenemos un simbolo reservado o no.
+	  tablaIntermedia - aquella que se genera con todos los simbolos evaluados del archivo.
+	  tablaCorrespondencia - mapa que ayuda a identificar el significado de los numeros que se encuentran en tipo del simbolo.
+	  tablaTokensGenerada - tabla que se devuelve en el metodo con token, idToken y lexema.
+	  tablatokens - mapa que ayuda a conseguir el token a partir del lexema (simbolo).
+
+   Returns:
+
+      	La tabla de tokens final luego del analisis. Se encontrara compuesta por el token, el id del token y el lexema que lo genera (simbolo).
+
+   See Also:
+
+      <ObtencionToken>
+	  <ExistenciaToken>
+	  <generarId>
 */
 func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIntermedia [][]Token, tablaCorrespondencia map[string]string, tablaTokensGenerada []TablaTokens, tablatokens map[string][]string) []TablaTokens {
 	var stringAcumulado string
@@ -128,10 +141,19 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 	return tablaTokensGenerada
 }
 
-/* Metodo que convierte los tipos numericos contenidos en un array de simbolos a
-su correspondiente significado en el mapa de correspondencia, con el fin de ingresarlo a la tabla final.
-Parametros: array de simbolos y de correspondencia
-Valor retorno: un vector de strings con el significado de todos los numeros asociados al simbolo
+/* Function: ConversionTypeSimbolo
+
+   Metodo que convierte los tipos numericos contenidos en un array de simbolos a su correspondiente significado en el mapa de correspondencia, con el fin de ingresarlo a la tabla final.
+
+   Parameters:
+
+      tiposSimbolo - array de string que contiene todos los numeros asociados al simbolo
+	  tablaCorrespondencia - mapa que tiene como llave el numero y como valor su significado real dentro del lenguaje de programacion Messi
+
+   Returns:
+
+      	Un array de string con todos los significados de los numeros
+
 */
 func ConversionTypeSimbolo(tiposSimbolo []string, tablaCorrespondencia map[string]string) []string {
 	valorReal := []string{}
@@ -144,9 +166,19 @@ func ConversionTypeSimbolo(tiposSimbolo []string, tablaCorrespondencia map[strin
 	return valorReal
 }
 
-/* Metodo que obtiene el token y el idToken correspondiente a cualquier tipo excepto identificadores.
-Parametros: lexema a encontrar y mapa de tokens.
-Valor de retorno: array con el token y el idToken para cada lexema.
+/* Function: ObtencionToken
+
+   Metodo que entrega el token y el id de este que se encuentra asociados a un lexema en particular
+
+   Parameters:
+
+      lexema - string que contiene el simbolo al cual se le van a extrar sus elementos asociados
+	  tablatokens - mapa que tiene como llave un string con el token y como llave un array que tiene el id y lexema
+
+   Returns:
+
+      	Un array con el token y el id unico de este.
+
 */
 func ObtencionToken(lexema string, tablatokens map[string][]string) []string {
 	token, isPresent := tablatokens[lexema]
@@ -157,10 +189,24 @@ func ObtencionToken(lexema string, tablatokens map[string][]string) []string {
 	}
 }
 
-/* Metodo que comprueba si un identificador ya fue inicializado anteriormente para asignarle
-su idToken asociado o si no se le genera uno nuevo.
-Parametros: lexema que contiene el token y id, la tabla de tokens final, i como longitud de la tabla
-Valor retorno: string con el id del identificador evaluado.
+/* Function: ExistenciaToken
+
+   Comprueba si un identificador ya fue inicializado anteriormente para asignarle su idToken asociado o si no se le genera uno nuevo.
+
+   Parameters:
+
+      lexema - string con el simbolo a considerar
+	  tablaTokens - tabla final de tokens que se genera luego de ejecutar el metodo Leer.
+	  lenTbTknGen - int que representa el tamano de la tabla de tokens generada.
+
+   Returns:
+
+      	El string con el id asociado al idenfiticador o el id generado.
+
+   See Also:
+
+      <Leer>
+	  <generarId>
 */
 func ExistenciaToken(lexema string, tablaTokens []TablaTokens, lenTbTknGen int) string {
 	existe := false
@@ -179,12 +225,37 @@ func ExistenciaToken(lexema string, tablaTokens []TablaTokens, lenTbTknGen int) 
 	}
 }
 
-// Metodo que genera un id unico para el identificador, se aumenta desde el lenTbTknGen
+/* Function: generarId
+
+   Metodo que genera un id unico para un identificador nuevo.
+
+   Parameters:
+
+      tablaTokens - tabla final de tokens que se genera luego de ejecutar el metodo Leer.
+	  lenTbTknGen - int que representa el tamano de la tabla de tokens generada.
+
+   Returns:
+
+      	El string con el id generado, sigue la logica de ser mayor que el tamano de la tabla de tokens generada, se le suma 1.
+
+*/
 func generarId(tablaTokens []TablaTokens, lenTbTknGen int) string {
 	return strconv.Itoa(len(tablaTokens) + lenTbTknGen)
 }
 
-// Metodo que cuenta el total de lineas del codigo fuente, uso en main.
+/* Function: ContarLineas
+
+   Metodo que cuenta las lineas del archivo de entrada.
+
+   Parameters:
+
+      nombreArchivo - string con el nombre del archivo de entrada.
+
+   Returns:
+
+      	El int con el numero de lineas del archivo de entrada.
+
+*/
 func ContadorLineas(nombreArchivo string) int {
 	archivo, err := os.Open(nombreArchivo)
 	if err != nil {
