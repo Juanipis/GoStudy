@@ -1,23 +1,5 @@
 package analizador
 
-/*Class: AritemticaStruct
-Estructura que guarda toda la informacion asociada a la expresion aritmetica y que debera ser almacenada
-*/
-type AritemticaStruct struct {
-	// Variable: Expresion
-	// Expresion aritmetica
-	Expresion string `json:"exp"`
-	// Variable: Linea
-	// Linea del codigo en la que se encuentra la expresion aritmetica
-	Linea string `json:"linea"`
-	// Variable: SimInicial
-	// Ubicacion del simbolo inicial de la expresion aritmetica en la linea de codigo correspondiente
-	SimInicial string `json:"simInicio"`
-	// Variable: SimInicial
-	// Ubicacion del simbolo final de la expresion aritmetica en la linea de codigo correspondiente
-	SimFinal string `json:"simFinal"`
-}
-
 /*Function: RAritmetico
 Metodo principal que analiza las expresiones aritmeticas existentes dentro de una linea
 
