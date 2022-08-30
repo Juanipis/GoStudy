@@ -1,7 +1,7 @@
 package analizador
 
-/* Estructura que guarda toda la informacion asociada a la expresion aritmetica y que debera ser almacenada
- */
+// Class: AritemticaStruct
+// Estructura que guarda toda la informacion asociada a la expresion aritmetica y que debera ser almacenada
 type AritemticaStruct struct {
 	Expresion  string `json:"exp"`
 	Linea      string `json:"linea"`
@@ -9,10 +9,17 @@ type AritemticaStruct struct {
 	SimFinal   string `json:"simFinal"`
 }
 
-/*Metodo principal que analiza las expresiones aritmeticas existentes dentro de una linea
-Parametros: Matriz que simboliza a la tabla final de simbolos
-Valor de retorno: un array de la estructura aritmetica
+/*Function: RAritmetico
+Metodo principal que analiza las expresiones aritmeticas existentes dentro de una linea
+
+Parameters:
+    tabla - Matriz que simboliza a la tabla final de simbolos.
+
+Returns:
+    Arreglo de AritmeticaStruct, que representa todas las expresiones aritmeticas encontradas en el codigo junto con su ubicacion.
+
 */
+
 func RAritmetico(tabla [][]string) []AritemticaStruct {
 	var linea string
 	var tablaAritmetica []AritemticaStruct
@@ -24,6 +31,19 @@ func RAritmetico(tabla [][]string) []AritemticaStruct {
 	}
 	return tablaAritmetica
 }
+
+/*Function: filter
+Metodo que filtra las expresiones aritmeticas una vez han sido detectadas
+
+Parameters:
+    tabla - Matriz que simboliza a la tabla final de simbolos.
+	pos - Posicion de un operador aritmetico en la tabla.
+	linea - Linea en la que se encuentra el operador y expresion aritmetica.
+
+Returns:
+    AritemticaStruct, que representa la expresion aritmetica encontrada en el codigo junto con su ubicacion.
+
+*/
 
 func filter(tabla [][]string, pos int, linea string) AritemticaStruct {
 	for {
