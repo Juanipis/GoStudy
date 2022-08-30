@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:process_run/shell.dart';
 
 void main() {
   runApp(const Analizador());
@@ -17,6 +16,7 @@ class Analizador extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "Analizador Lexicografico",
       home: HomeAnalizador(),
     );
@@ -34,13 +34,6 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
   List<Tabla1Data> tabla1Cells = [];
   List<Tabla2Data> tabla2Cells = [];
   List<TablaAritmetica> tabla3Cells = [];
-  /*
-  @override
-  void initState() {
-    super.initState();
-    var shell = Shell();
-    shell.run('''./workspace2''');
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +51,7 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
               },
               icon: const Icon(Icons.delete)),
           IconButton(
-              onPressed: () {
-                var shell = Shell();
-                shell.run('''killall workspace2''');
+              onPressed: () async {
                 SystemNavigator.pop();
               },
               icon: const Icon(Icons.logout))
