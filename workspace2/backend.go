@@ -14,9 +14,15 @@ import (
 	"github.com/gorilla/mux"
 )
 
-/*Metodo que recibe la peticion GET /tabla1 y devuelve la tabla de simbolos
-Parametros: w ---> escribe los datos a devolver
-r ---> solicitud entrante
+/*
+Function: Tabla1
+
+	Metodo que recibe la peticion GET /tabla1 y devuelve la tabla de simbolos
+
+	Parameters:
+
+	   w - Escribe los datos a devolver
+	   r - Solicitud entrante.
 */
 func Tabla1(w http.ResponseWriter, r *http.Request) {
 	result := getTable1()
@@ -26,9 +32,15 @@ func Tabla1(w http.ResponseWriter, r *http.Request) {
 
 }
 
-/*Metodo que recibe la peticion GET /tabla2 y devuelve la tabla de tokens
-Parametros: w ---> escribe los datos a devolver
-r ---> solicitud entrante
+/*
+Function: Tabla2
+
+	Metodo que recibe la peticion GET /tabla2 y devuelve la tabla de tokens
+
+	Parameters:
+
+	   w - Escribe los datos a devolver
+	   r - Solicitud entrante.
 */
 func Tabla2(w http.ResponseWriter, r *http.Request) {
 	result := getTable2()
@@ -36,12 +48,17 @@ func Tabla2(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(b)
-
 }
 
-/*Metodo que recibe la peticion GET /tabla3 y devuelve la tabla aritmetica
-Parametros: w ---> escribe los datos a devolver
-r ---> solicitud entrante
+/*
+Function: Tabla3
+
+	Metodo que recibe la peticion GET /tabla3 y devuelve la tabla aritmetica
+
+	Parameters:
+
+	   w - Escribe los datos a devolver
+	   r - Solicitud entrante.
 */
 func Tabla3(w http.ResponseWriter, r *http.Request) {
 	result := getTable3()
@@ -52,10 +69,16 @@ func Tabla3(w http.ResponseWriter, r *http.Request) {
 
 }
 
-/*Metodo que recibe los archivos entrantes a ser analizados
-Parametros: w ---> escribe los datos recibidos en un archivo prog.messi
-r ---> solicitud entrante
+/* Function: UploadFile
+
+   Metodo que recibe los archivos entrantes a ser analizados
+
+   Parameters:
+
+      w - escribe los datos recibidos en un archivo prog.messi
+      r - Solicitud entrante.
 */
+
 func UploadFile(w http.ResponseWriter, r *http.Request) {
 	file, _, err := r.FormFile("file")
 	fileName := r.FormValue("file_name")
@@ -73,7 +96,11 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	_, _ = io.Copy(f, file)
 }
 
-//Metodo principal que abre el servidor y se mantine activo a la escucha de peticiones
+/*
+Function: main
+
+	Metodo principal que abre el servidor y se mantine activo a la escucha de peticiones
+*/
 func main() {
 	r := mux.NewRouter()
 	// Las rutas consisten de un path y una funcion para enviar o recibir datos
@@ -85,6 +112,22 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8001", r))
 }
 
+/* Function: getTable1
+
+   Metodo que devuelve un arreglo de simbolos finales que se utilizara en la peticion /page1
+
+   Returns:
+
+      Arreglo de simbolos finales
+
+   See Also:
+
+      <Tabla1>
+			<Leer>
+			<CrearMapaSimbolos>
+			<CrearMapaCorrespondencia>
+			<CrearMapaTokens>
+*/
 //Metodo que devuelve un arreglo de simbolos finales que se utilizara en la peticion /page1
 func getTable1() []analizador.FinalSimbol {
 	tabla2 := []analizador.TablaTokens{}
@@ -142,7 +185,23 @@ func getTable1() []analizador.FinalSimbol {
 	return final2
 }
 
-//Metodo que devuelve un arreglo de tokens finales que se utilizara en la peticion /page2
+/*
+	 Function: getTable2
+
+	   Metodo que devuelve un arreglo de tokens finales que se utilizara en la peticion /page2
+
+	   Returns:
+
+	      Arreglo de tabla tokens finales
+
+	   See Also:
+
+	      <Tabla2>
+				<Leer>
+				<CrearMapaSimbolos>
+				<CrearMapaCorrespondencia>
+				<CrearMapaTokens>
+*/
 func getTable2() []analizador.TablaTokens {
 	tabla2 := []analizador.TablaTokens{}
 	//Crear mapa de lectura simbolos
@@ -186,6 +245,23 @@ func getTable2() []analizador.TablaTokens {
 	return tabla2
 }
 
+/* Function: getTable3
+
+   Metodo que devuelve un arreglo de expresiones aritmeticas que se utilizara en la peticion /page3
+
+   Returns:
+
+      Arreglo de tabla expresiones aritmeticas
+
+   See Also:
+
+      <Tabla3>
+			<Leer>
+			<CrearMapaSimbolos>
+			<CrearMapaCorrespondencia>
+			<CrearMapaTokens>
+			<RAritmetico>
+*/
 //Metodo que devuelve un arreglo de expresiones aritmeticas que se utilizara en la peticion /page3
 func getTable3() []analizador.AritemticaStruct {
 	tabla2 := []analizador.TablaTokens{}
