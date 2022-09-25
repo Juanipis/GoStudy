@@ -11,6 +11,7 @@ import (
 	"os"
 	"strconv"
 	analizador "workspace2/analizador"
+	automatas "workspace2/automatas"
 
 	"github.com/gorilla/mux"
 )
@@ -117,9 +118,9 @@ func AnalizarExpresionAritmetica(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Println(string(newData))
 		//Cuando tengamos listo
-		//result, log := automataAritmetica()
-		//arit := ResultAritmetica{Result: result, Log: log}
-		arit := ResultAritmetica{Result: true, Log: "Mathc: 1\n Match2"}
+		result, log := automatas.Run(string(newData))
+		arit := ResultAritmetica{Result: result, Log: log}
+		//arit := ResultAritmetica{Result: true, Log: "Mathc: 1\n Match2"}
 		json.NewEncoder(w).Encode(arit)
 	}
 }
