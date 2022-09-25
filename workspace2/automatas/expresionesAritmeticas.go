@@ -2,49 +2,52 @@
 package automatas
 
 import (
-	"fmt"
+	"strconv"
+	"strings"
 	"unicode"
 )
 
 var cadena string
 var posicion int
 var Token_Entrada byte
+var Log string
 
-func main() {
-	cadena1 := "12+((((($ab*67/2))*1))/8"
-	cadena = cadena1
-
-	posicion1 := 0
-	posicion = posicion1
-
-	var Token_Entrada1 byte = '0'
-	Token_Entrada = Token_Entrada1
-
+func Run(cadenaIN string) (bool, string) {
+	Log = ""
+	cadena = cadenaIN
 	Token_Entrada = PrimerToken()
 
 	expresion()
 	if Token_Entrada != ';' {
 		if Token_Entrada == ')' {
-			fmt.Println("Error: Hace falta '(' en algun lugar")
+			Log = Log + ("Error: Hace falta '(' en algun lugar\n")
 		} else {
-			fmt.Printf("Error: Syntax: %c en la posición %d \n", Token_Entrada, posicion)
+			Log = Log + ("Error: Syntax: " + string(Token_Entrada) + " en la posición " + strconv.Itoa(posicion) + "\n")
 		}
 		Token_Entrada = SiguienteToken()
 		seguirExpresion()
 	}
 
+	var received bool
+	if strings.Contains(Log, "Error") {
+		received = false
+	} else {
+		received = true
+	}
+
+	return received, Log
 }
 
 func seguirExpresion() {
 	expresion_prima()
-	if Token_Entrada == '*' || Token_Entrada == '/' {
+	if Token_Entrada == '*' || Token_Entrada == '/' || Token_Entrada == '%' || Token_Entrada == '^' {
 		termino_prima()
 	}
 	if Token_Entrada != ';' {
 		if Token_Entrada == ')' {
-			fmt.Println("Error: Hace falta '(' en algun lugar")
+			Log = Log + ("Error: Hace falta '(' en algun lugar\n")
 		} else {
-			fmt.Printf("Error: Syntax: %c en la posición %d \n", Token_Entrada, posicion)
+			Log = Log + ("Error: Syntax: " + string(Token_Entrada) + " en la posición " + strconv.Itoa(posicion) + "\n")
 		}
 		Token_Entrada = SiguienteToken()
 		seguirExpresion()
@@ -59,7 +62,11 @@ func PrimerToken() byte {
 func SiguienteToken() byte {
 	if posicion < len(cadena) {
 		posicion = posicion + 1
-		return cadena[posicion-1]
+		if cadena[posicion-1] == ' ' {
+			return SiguienteToken()
+		} else {
+			return cadena[posicion-1]
+		}
 	} else {
 		posicion = posicion + 1
 		return ';'
@@ -68,10 +75,29 @@ func SiguienteToken() byte {
 
 func HacerMatch(t byte) {
 	if t == Token_Entrada {
-		fmt.Printf("Match: %c %d\n", Token_Entrada, posicion)
+		Log = Log + ("Match: " + string(Token_Entrada) + " " + strconv.Itoa(posicion) + "\n")
 		Token_Entrada = SiguienteToken()
 	} else {
-		fmt.Println("error")
+		Log = Log + ("error\n")
+	}
+}
+
+func SiguienteTokenID() byte {
+	if posicion < len(cadena) {
+		posicion = posicion + 1
+		return cadena[posicion-1]
+	} else {
+		posicion = posicion + 1
+		return ';'
+	}
+}
+
+func HacerMatchID(t byte) {
+	if t == Token_Entrada {
+		Log = Log + ("Match: " + string(Token_Entrada) + " " + strconv.Itoa(posicion) + "\n")
+		Token_Entrada = SiguienteTokenID()
+	} else {
+		Log = Log + ("error\n")
 	}
 }
 
@@ -79,7 +105,6 @@ func HacerMatch(t byte) {
 
 func expresion() {
 	termino()
-
 	expresion_prima()
 }
 
@@ -112,6 +137,14 @@ func termino_prima() {
 		HacerMatch('/')
 		factor()
 		termino_prima()
+	} else if Token_Entrada == '%' {
+		HacerMatch('%')
+		factor()
+		termino_prima()
+	} else if Token_Entrada == '^' {
+		HacerMatch('^')
+		factor()
+		termino_prima()
 	} else {
 		//epsilon
 	}
@@ -121,13 +154,20 @@ func factor() {
 	if Token_Entrada == '(' {
 		HacerMatch('(')
 		expresion()
+		if unicode.IsLetter(rune(Token_Entrada)) {
+			Log = Log + ("Error: Syntax: " + string(Token_Entrada) + " en la posición " + strconv.Itoa(posicion) + "\n")
+			Token_Entrada = SiguienteToken()
+			expresion_prima()
+			if Token_Entrada == '*' || Token_Entrada == '/' || Token_Entrada == '%' || Token_Entrada == '^' {
+				termino_prima()
+			}
+		}
 		if Token_Entrada == ')' {
 			HacerMatch(')')
 		} else {
-			fmt.Println("Error: Se esperaba un ')' en la posición:", posicion)
-			SiguienteToken()
+			Log = Log + ("Error: Se esperaba un ')' en la posición:" + strconv.Itoa(posicion) + "\n")
+			Token_Entrada = SiguienteToken()
 		}
-
 	} else if is_cov(Token_Entrada) {
 		cov()
 	} else {
@@ -143,7 +183,7 @@ func cov() {
 		HacerMatch('$')
 		identificador()
 	} else {
-		fmt.Println("Error: Se esperaba una variable o constante en la posición:", posicion)
+		Log = Log + ("Error: Se esperaba una variable o constante en la posición:" + strconv.Itoa(posicion) + "\n")
 	}
 }
 
@@ -156,6 +196,8 @@ func identificador_prima() {
 	if is_letter(Token_Entrada) {
 		letra()
 		identificador_prima()
+	} else if Token_Entrada == ' ' {
+		Token_Entrada = SiguienteToken()
 	} else {
 		//epsilon
 	}
@@ -163,9 +205,9 @@ func identificador_prima() {
 
 func letra() {
 	if is_letter(Token_Entrada) {
-		HacerMatch(Token_Entrada)
+		HacerMatchID(Token_Entrada)
 	} else {
-		fmt.Println("Error: Se esperaba una letra en la posición:", posicion)
+		Log = Log + ("Error: Se esperaba una letra en la posición:" + strconv.Itoa(posicion) + "\n")
 	}
 }
 
@@ -187,8 +229,7 @@ func digito() {
 	if is_digit(Token_Entrada) {
 		HacerMatch(Token_Entrada)
 	} else {
-		fmt.Println("Error: Se esperaba un digito en la posición:", posicion)
-
+		Log = Log + ("Error: Se esperaba un digito, variable o constante en la posición:" + strconv.Itoa(posicion) + "\n")
 	}
 }
 
