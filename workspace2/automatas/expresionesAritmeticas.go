@@ -169,9 +169,12 @@ func factor() {
 			Token_Entrada = SiguienteToken()
 		}
 	} else if is_cov(Token_Entrada) {
-		cov()
-	} else {
-		numero()
+		if is_letter(cadena[posicion]) {
+			cov()
+		} else if is_digit(cadena[posicion]) {
+			HacerMatch('@')
+			numero()
+		}
 	}
 }
 
