@@ -11,6 +11,25 @@ type Token struct {
 	TypeToken []string
 }
 
+// Class: ExprAritmetica
+// Generacion de estructura para manejo de expresiones aritmeticas\nSu existencia es necesaria para recibir los datos en formato json y poder ser leidos por el backend
+type ExprAritmetica struct {
+	// Variable: Exp
+	// La expresion aritmetica
+	Exp string `json:"exp"`
+}
+
+// Class: ResultAritmetica
+// Generacion de estructura para manejo de expresiones aritmeticas\nSu existencia es necesaria para enviar los datos en formato json y poder ser leidos por el frontend
+type ResultAritmetica struct {
+	// Variable: Result
+	// El resultado de la expresion aritmetica, puede ser True o False, en el front se traduce a ACEPTADO o RECHAZADO
+	Result bool `json:"result"`
+	// Variable: Log
+	// El log de la expresion aritmetica, contiene los errores que se hayan encontrado y los match que se hayan hecho
+	Log string `json:"log"`
+}
+
 // Class: TablaTokens
 // Generacion de estructura para manejo de los tokens del codigo fuente
 type TablaTokens struct {

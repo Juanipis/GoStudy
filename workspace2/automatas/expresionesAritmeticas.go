@@ -12,7 +12,11 @@ var posicion int
 var Token_Entrada byte
 var Log string
 
-func Run(cadenaIN string) (bool, string) {
+/* Function: AutomataExpresiones
+Automata encargado de bñlblblbaba
+*/
+
+func AutomataExpresiones(cadenaIN string) (bool, string) {
 	Log = ""
 	cadena = cadenaIN
 	Token_Entrada = PrimerToken()

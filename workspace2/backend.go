@@ -11,7 +11,7 @@ import (
 	"os"
 	"strconv"
 	analizador "workspace2/analizador"
-	automatas "workspace2/automatas"
+	"workspace2/automatas"
 
 	"github.com/gorilla/mux"
 )
@@ -65,7 +65,6 @@ Function: Tabla3
 func Tabla3(w http.ResponseWriter, r *http.Request) {
 	result := getTable3()
 	b, _ := json.Marshal(result)
-	fmt.Println(b)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(b)
 
@@ -98,31 +97,24 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	_, _ = io.Copy(f, file)
 }
 
-type ExprAritmetica struct {
-	Exp string `json:"exp"`
-}
-type ResultAritmetica struct {
-	Result bool   `json:"result"`
-	Log    string `json:"log"`
-}
-
+/*
+	 Function: AnalizarExpresionAritmetica
+		Metodo que recibe la peticion POST /Aritmetica y devuelve el resultado de la expresion aritmetica, si es valida o no y el log de las operaciones realizadas
+		See Also:
+			<AutomataExpresiones>
+		Parameters:
+	    w - escribe los datos recibidos en un archivo prog.messi
+	    r - Solicitud entrante.
+*/
 func AnalizarExpresionAritmetica(w http.ResponseWriter, r *http.Request) {
-
 	reqBody, _ := ioutil.ReadAll(r.Body)
-	var newExp ExprAritmetica
+	var newExp analizador.ExprAritmetica
 	json.Unmarshal(reqBody, &newExp)
+	fmt.Println(newExp)
+	result, log := automatas.AutomataExpresiones(newExp.Exp)
+	arit := analizador.ResultAritmetica{Result: result, Log: log}
+	json.NewEncoder(w).Encode(arit)
 
-	newData, err := json.Marshal(newExp)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println(string(newData))
-		//Cuando tengamos listo
-		result, log := automatas.Run(string(newData))
-		arit := ResultAritmetica{Result: result, Log: log}
-		//arit := ResultAritmetica{Result: true, Log: "Mathc: 1\n Match2"}
-		json.NewEncoder(w).Encode(arit)
-	}
 }
 
 /*

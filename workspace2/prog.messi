@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	const int hola = 14+5*(90/1)/1
+	const int hola = @14+@5*(@90/@1)/@1
 	const int @diasSemana = $7
 	const int @diasMes = $31
 	var int $horasSemana
