@@ -3,7 +3,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"unicode"
 )
 
@@ -12,8 +11,18 @@ var posicion int
 var Token_Entrada byte
 
 func main() {
-	cadena = "(18-(@r*(2-4)/7)+$g"
+	cadena1 := "(6+12*(12"
+	cadena = cadena1
+
+	posicion1 := 0
+	posicion = posicion1
+
+	var Token_Entrada1 byte = '0'
+	Token_Entrada = Token_Entrada1
+
 	Token_Entrada = PrimerToken()
+	mundo := 123
+	fmt.Println(mundo)
 	expresion()
 }
 
@@ -27,17 +36,16 @@ func SiguienteToken() byte {
 		posicion = posicion + 1
 		return cadena[posicion-1]
 	} else {
-		os.Exit(0)
-		return 0
+		return ';'
 	}
 }
 
 func HacerMatch(t byte) {
 	if t == Token_Entrada {
-		fmt.Printf("Match: %c \n", Token_Entrada)
+		fmt.Printf("Match: %c %i\n", Token_Entrada, posicion)
 		Token_Entrada = SiguienteToken()
 	} else {
-		panic("Error")
+		fmt.Println("error")
 	}
 }
 
@@ -85,7 +93,12 @@ func factor() {
 	if Token_Entrada == '(' {
 		HacerMatch('(')
 		expresion()
-		HacerMatch(')')
+		if Token_Entrada == ')' {
+			HacerMatch(')')
+		} else {
+			fmt.Println("Se esperaba ) en la posición %i", posicion)
+		}
+
 	} else if is_cov(Token_Entrada) {
 		cov()
 	} else {
@@ -101,7 +114,7 @@ func cov() {
 		HacerMatch('$')
 		identificador()
 	} else {
-		panic("Error")
+		fmt.Println("Error, se esperaba una variable o constante")
 	}
 }
 
@@ -123,7 +136,7 @@ func letra() {
 	if is_letter(Token_Entrada) {
 		HacerMatch(Token_Entrada)
 	} else {
-		panic("Error")
+		fmt.Println("Error, se esperaba una letra")
 	}
 }
 
@@ -145,7 +158,9 @@ func digito() {
 	if is_digit(Token_Entrada) {
 		HacerMatch(Token_Entrada)
 	} else {
-		panic("Error")
+		fmt.Println("Se esperaba un digito")
+		SiguienteToken()
+		expresion()
 	}
 }
 
