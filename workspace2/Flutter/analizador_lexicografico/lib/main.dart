@@ -185,13 +185,78 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
         ],
         rows: tabla3
             .map((item) => DataRow(cells: [
-                  DataCell(Text(item.expresion)),
+                  DataCell(
+                    Text(item.expresion),
+                    onDoubleTap: () {
+                      checkAritmetica(context, item.expresion);
+                      print("Funcionando");
+                    },
+                  ),
                   DataCell(Text(item.linea)),
                   DataCell(Text(item.simboloInicio)),
                   DataCell(Text(item.simboloFinal))
                 ]))
             .toList());
   }
+
+  void checkAritmetica(BuildContext context, String expresion) {
+    NavigatorState navState = Navigator.of(context);
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Analizador aritmetico"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Text("Va a analizar la siguiente expresión:"),
+                Text(expresion),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: (() => analizarAritmetica(context, expresion)),
+                  child: const Text("Analizar")),
+              TextButton(
+                  onPressed: (() => navState.pop()), child: const Text("Salir"))
+            ],
+          );
+        });
+  }
+
+  analizarAritmetica(BuildContext context, String expresion) async {
+    NavigatorState navState = Navigator.of(context);
+    navState.pop();
+    circularProgress(context);
+    final response = await aritmeticaPOST(expresion);
+    navState.pop();
+    Map<String, dynamic> decoded = json.decode(response.body);
+    String acept = (decoded["result"]) ? "ACEPTADO" : "RECHAZADO";
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Resultado: $acept"),
+            content: Text(decoded["log"]),
+            actions: [
+              TextButton(
+                  onPressed: (() => navState.pop()), child: const Text("Salir"))
+            ],
+          );
+        });
+  }
+}
+
+Future<http.Response> aritmeticaPOST(String expresion) {
+  return http.post(
+    Uri.parse('http://localhost:8001/Aritmetica'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      "exp": expresion,
+    }),
+  );
 }
 
 Future<bool> dialogOpen(BuildContext context) async {

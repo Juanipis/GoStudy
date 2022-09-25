@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -96,6 +97,33 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	_, _ = io.Copy(f, file)
 }
 
+type ExprAritmetica struct {
+	Exp string `json:"exp"`
+}
+type ResultAritmetica struct {
+	Result bool   `json:"result"`
+	Log    string `json:"log"`
+}
+
+func AnalizarExpresionAritmetica(w http.ResponseWriter, r *http.Request) {
+
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	var newExp ExprAritmetica
+	json.Unmarshal(reqBody, &newExp)
+
+	newData, err := json.Marshal(newExp)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(string(newData))
+		//Cuando tengamos listo
+		//result, log := automataAritmetica()
+		//arit := ResultAritmetica{Result: result, Log: log}
+		arit := ResultAritmetica{Result: true, Log: "Mathc: 1\n Match2"}
+		json.NewEncoder(w).Encode(arit)
+	}
+}
+
 /*
 Function: main
 
@@ -108,6 +136,7 @@ func main() {
 	r.HandleFunc("/tabla2", Tabla2).Methods("GET")
 	r.HandleFunc("/tabla3", Tabla3).Methods("GET")
 	r.HandleFunc("/file", UploadFile).Methods("POST")
+	r.HandleFunc("/Aritmetica", AnalizarExpresionAritmetica).Methods("POST")
 	// Vinculacion a puerto y se pasa router para comenzar proceso de escucha
 	log.Fatal(http.ListenAndServe(":8001", r))
 }
