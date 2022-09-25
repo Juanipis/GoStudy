@@ -11,7 +11,7 @@ var posicion int
 var Token_Entrada byte
 
 func main() {
-	cadena1 := "(6+12*(12"
+	cadena1 := "12+((((($ab*67/2))*1))/8"
 	cadena = cadena1
 
 	posicion1 := 0
@@ -21,9 +21,34 @@ func main() {
 	Token_Entrada = Token_Entrada1
 
 	Token_Entrada = PrimerToken()
-	mundo := 123
-	fmt.Println(mundo)
+
 	expresion()
+	if Token_Entrada != ';' {
+		if Token_Entrada == ')' {
+			fmt.Println("Error: Hace falta '(' en algun lugar")
+		} else {
+			fmt.Printf("Error: Syntax: %c en la posición %d \n", Token_Entrada, posicion)
+		}
+		Token_Entrada = SiguienteToken()
+		seguirExpresion()
+	}
+
+}
+
+func seguirExpresion() {
+	expresion_prima()
+	if Token_Entrada == '*' || Token_Entrada == '/' {
+		termino_prima()
+	}
+	if Token_Entrada != ';' {
+		if Token_Entrada == ')' {
+			fmt.Println("Error: Hace falta '(' en algun lugar")
+		} else {
+			fmt.Printf("Error: Syntax: %c en la posición %d \n", Token_Entrada, posicion)
+		}
+		Token_Entrada = SiguienteToken()
+		seguirExpresion()
+	}
 }
 
 func PrimerToken() byte {
@@ -36,13 +61,14 @@ func SiguienteToken() byte {
 		posicion = posicion + 1
 		return cadena[posicion-1]
 	} else {
+		posicion = posicion + 1
 		return ';'
 	}
 }
 
 func HacerMatch(t byte) {
 	if t == Token_Entrada {
-		fmt.Printf("Match: %c %i\n", Token_Entrada, posicion)
+		fmt.Printf("Match: %c %d\n", Token_Entrada, posicion)
 		Token_Entrada = SiguienteToken()
 	} else {
 		fmt.Println("error")
@@ -53,10 +79,12 @@ func HacerMatch(t byte) {
 
 func expresion() {
 	termino()
+
 	expresion_prima()
 }
 
 func expresion_prima() {
+
 	if Token_Entrada == '+' {
 		HacerMatch('+')
 		termino()
@@ -96,7 +124,8 @@ func factor() {
 		if Token_Entrada == ')' {
 			HacerMatch(')')
 		} else {
-			fmt.Println("Se esperaba ) en la posición %i", posicion)
+			fmt.Println("Error: Se esperaba un ')' en la posición:", posicion)
+			SiguienteToken()
 		}
 
 	} else if is_cov(Token_Entrada) {
@@ -114,7 +143,7 @@ func cov() {
 		HacerMatch('$')
 		identificador()
 	} else {
-		fmt.Println("Error, se esperaba una variable o constante")
+		fmt.Println("Error: Se esperaba una variable o constante en la posición:", posicion)
 	}
 }
 
@@ -136,7 +165,7 @@ func letra() {
 	if is_letter(Token_Entrada) {
 		HacerMatch(Token_Entrada)
 	} else {
-		fmt.Println("Error, se esperaba una letra")
+		fmt.Println("Error: Se esperaba una letra en la posición:", posicion)
 	}
 }
 
@@ -158,9 +187,8 @@ func digito() {
 	if is_digit(Token_Entrada) {
 		HacerMatch(Token_Entrada)
 	} else {
-		fmt.Println("Se esperaba un digito")
-		SiguienteToken()
-		expresion()
+		fmt.Println("Error: Se esperaba un digito en la posición:", posicion)
+
 	}
 }
 
