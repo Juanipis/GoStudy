@@ -189,7 +189,6 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
                     Text(item.expresion),
                     onDoubleTap: () {
                       checkAritmetica(context, item.expresion);
-                      print("Funcionando");
                     },
                   ),
                   DataCell(Text(item.linea)),
