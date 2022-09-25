@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"unicode"
 )
 
 var cadena string
@@ -11,14 +12,13 @@ var posicion int
 var Token_Entrada byte
 
 func main() {
-	cadena = "1-(1*(2-4)/7)+3"
-	posicion = 0
+	cadena = "(18-(@r*(2-4)/7)+$g"
 	Token_Entrada = PrimerToken()
 	expresion()
 }
 
 func PrimerToken() byte {
-	posicion = posicion + 1
+	posicion = 1
 	return cadena[0]
 }
 
@@ -34,7 +34,7 @@ func SiguienteToken() byte {
 
 func HacerMatch(t byte) {
 	if t == Token_Entrada {
-		fmt.Printf("Match: %c \t", Token_Entrada)
+		fmt.Printf("Match: %c \n", Token_Entrada)
 		Token_Entrada = SiguienteToken()
 	} else {
 		panic("Error")
@@ -86,8 +86,44 @@ func factor() {
 		HacerMatch('(')
 		expresion()
 		HacerMatch(')')
+	} else if is_cov(Token_Entrada) {
+		cov()
 	} else {
 		numero()
+	}
+}
+
+func cov() {
+	if Token_Entrada == '@' {
+		HacerMatch('@')
+		identificador()
+	} else if Token_Entrada == '$' {
+		HacerMatch('$')
+		identificador()
+	} else {
+		panic("Error")
+	}
+}
+
+func identificador() {
+	letra()
+	identificador_prima()
+}
+
+func identificador_prima() {
+	if is_letter(Token_Entrada) {
+		letra()
+		identificador_prima()
+	} else {
+		//epsilon
+	}
+}
+
+func letra() {
+	if is_letter(Token_Entrada) {
+		HacerMatch(Token_Entrada)
+	} else {
+		panic("Error")
 	}
 }
 
@@ -115,6 +151,22 @@ func digito() {
 
 func is_digit(tokenEntrada byte) bool {
 	if tokenEntrada == '0' || tokenEntrada == '1' || tokenEntrada == '2' || tokenEntrada == '3' || tokenEntrada == '4' || tokenEntrada == '5' || tokenEntrada == '6' || tokenEntrada == '7' || tokenEntrada == '8' || tokenEntrada == '9' {
+		return true
+	} else {
+		return false
+	}
+}
+
+func is_cov(tokenEntrada byte) bool {
+	if tokenEntrada == '@' || tokenEntrada == '$' {
+		return true
+	} else {
+		return false
+	}
+}
+
+func is_letter(tokenEntrada byte) bool {
+	if unicode.IsLetter(rune(tokenEntrada)) {
 		return true
 	} else {
 		return false
