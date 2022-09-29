@@ -79,7 +79,7 @@ func SiguienteToken() byte {
 
 func HacerMatch(t byte) {
 	if t == Token_Entrada {
-		Log = Log + ("Match: " + string(Token_Entrada) + " " + strconv.Itoa(posicion) + "\n")
+		//Log = Log + ("Match: " + string(Token_Entrada) + " " + strconv.Itoa(posicion) + "\n")
 		Token_Entrada = SiguienteToken()
 	} else {
 		Log = Log + ("error\n")
@@ -98,7 +98,7 @@ func SiguienteTokenID() byte {
 
 func HacerMatchID(t byte) {
 	if t == Token_Entrada {
-		Log = Log + ("Match: " + string(Token_Entrada) + " " + strconv.Itoa(posicion) + "\n")
+		//Log = Log + ("Match: " + string(Token_Entrada) + " " + strconv.Itoa(posicion) + "\n")
 		Token_Entrada = SiguienteTokenID()
 	} else {
 		Log = Log + ("error\n")
