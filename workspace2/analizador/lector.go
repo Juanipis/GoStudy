@@ -8,29 +8,30 @@ import (
 	"strings"
 )
 
-/* Function: Leer
+/*
+	 Function: Leer
 
-   Se encarga de la lectura del codigo fuente con el que se alimenta el programa. Genera una tabla intermedia para la tabla final de simbolos y la tabla final de tokens.
+	   Se encarga de la lectura del codigo fuente con el que se alimenta el programa. Genera una tabla intermedia para la tabla final de simbolos y la tabla final de tokens.
 
-   Parameters:
+	   Parameters:
 
-      linea - corresponde a aquella del archivo a ser analizada.
-      numlinea - identifica el numero de la linea con la que se esta trabajando.
-	  tablaSimbolos - mapa que ayuda a saber si tenemos un simbolo reservado o no.
-	  tablaIntermedia - aquella que se genera con todos los simbolos evaluados del archivo.
-	  tablaCorrespondencia - mapa que ayuda a identificar el significado de los numeros que se encuentran en tipo del simbolo.
-	  tablaTokensGenerada - tabla que se devuelve en el metodo con token, idToken y lexema.
-	  tablatokens - mapa que ayuda a conseguir el token a partir del lexema (simbolo).
+	      linea - corresponde a aquella del archivo a ser analizada.
+	      numlinea - identifica el numero de la linea con la que se esta trabajando.
+		  tablaSimbolos - mapa que ayuda a saber si tenemos un simbolo reservado o no.
+		  tablaIntermedia - aquella que se genera con todos los simbolos evaluados del archivo.
+		  tablaCorrespondencia - mapa que ayuda a identificar el significado de los numeros que se encuentran en tipo del simbolo.
+		  tablaTokensGenerada - tabla que se devuelve en el metodo con token, idToken y lexema.
+		  tablatokens - mapa que ayuda a conseguir el token a partir del lexema (simbolo).
 
-   Returns:
+	   Returns:
 
-      	La tabla de tokens final luego del analisis. Se encontrara compuesta por el token, el id del token y el lexema que lo genera (simbolo).
+	      	La tabla de tokens final luego del analisis. Se encontrara compuesta por el token, el id del token y el lexema que lo genera (simbolo).
 
-   See Also:
+	   See Also:
 
-      <ObtencionToken>
-	  <ExistenciaToken>
-	  <generarId>
+	      <ObtencionToken>
+		  <ExistenciaToken>
+		  <generarId>
 */
 func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIntermedia [][]Token, tablaCorrespondencia map[string]string, tablaTokensGenerada []TablaTokens, tablatokens map[string][]string) []TablaTokens {
 	var stringAcumulado string
@@ -69,17 +70,17 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 					if strings.HasPrefix(stringAcumulado, "@") {
 						//Se ingresa el identificador constante a tabla de simbolos y de tokens.
 						lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador", "Constante"}})
-						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorConstante", ExistenciaToken(stringAcumulado, tablaTokensGenerada, len(tablatokens)), stringAcumulado})
+						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorConstante", "66", stringAcumulado})
 						//Si el primer caracter del stringAcumulado es un simbolo de pesos, significa que es una variable.
 					} else if strings.HasPrefix(stringAcumulado, "$") {
 						//Se ingresa el identificador variable a tabla de simbolos y de tokens.
 						lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador", "Variable"}})
-						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorVariable", ExistenciaToken(stringAcumulado, tablaTokensGenerada, len(tablatokens)), stringAcumulado})
+						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorVariable", "67", stringAcumulado})
 						//Si no cumple ninguno de los dos anteriores, se clasifica como identificador unicamente.
 					} else {
 						//Se ingresa el identificador a tabla de simbolos y de tokens.
 						lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador"}})
-						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"Identificador", ExistenciaToken(stringAcumulado, tablaTokensGenerada, len(tablatokens)), stringAcumulado})
+						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"Identificador", "68", stringAcumulado})
 					}
 				}
 			}
@@ -94,7 +95,7 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 						stringAcumulado += "!>"
 						i += 2
 						lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Comentario"}})
-						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"Comentario", generarId(tablaTokensGenerada, len(tablatokens)), stringAcumulado})
+						tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"Comentario", "69", stringAcumulado})
 						break
 					} else {
 						stringAcumulado += string(linea[i])
@@ -126,13 +127,13 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 		} else {
 			if strings.HasPrefix(stringAcumulado, "@") {
 				lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador", "Constante"}})
-				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorConstante", ExistenciaToken(stringAcumulado, tablaTokensGenerada, len(tablatokens)), stringAcumulado})
+				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorConstante", "66", stringAcumulado})
 			} else if strings.HasPrefix(stringAcumulado, "$") {
 				lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador", "Variable"}})
-				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorVariable", ExistenciaToken(stringAcumulado, tablaTokensGenerada, len(tablatokens)), stringAcumulado})
+				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"IdentificadorVariable", "67", stringAcumulado})
 			} else {
 				lineaEvaluar = append(lineaEvaluar, Token{stringAcumulado, []string{"Identificador"}})
-				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"Identificador", ExistenciaToken(stringAcumulado, tablaTokensGenerada, len(tablatokens)), stringAcumulado})
+				tablaTokensGenerada = append(tablaTokensGenerada, TablaTokens{"Identificador", "68", stringAcumulado})
 			}
 		}
 	}
@@ -141,19 +142,19 @@ func Leer(linea string, numlinea int, tablaSimbolos map[string][]string, tablaIn
 	return tablaTokensGenerada
 }
 
-/* Function: ConversionTypeSimbolo
+/*
+	 Function: ConversionTypeSimbolo
 
-   Metodo que convierte los tipos numericos contenidos en un array de simbolos a su correspondiente significado en el mapa de correspondencia, con el fin de ingresarlo a la tabla final.
+	   Metodo que convierte los tipos numericos contenidos en un array de simbolos a su correspondiente significado en el mapa de correspondencia, con el fin de ingresarlo a la tabla final.
 
-   Parameters:
+	   Parameters:
 
-      tiposSimbolo - array de string que contiene todos los numeros asociados al simbolo
-	  tablaCorrespondencia - mapa que tiene como llave el numero y como valor su significado real dentro del lenguaje de programacion Messi
+	      tiposSimbolo - array de string que contiene todos los numeros asociados al simbolo
+		  tablaCorrespondencia - mapa que tiene como llave el numero y como valor su significado real dentro del lenguaje de programacion Messi
 
-   Returns:
+	   Returns:
 
-      	Un array de string con todos los significados de los numeros
-
+	      	Un array de string con todos los significados de los numeros
 */
 func ConversionTypeSimbolo(tiposSimbolo []string, tablaCorrespondencia map[string]string) []string {
 	valorReal := []string{}
@@ -166,19 +167,19 @@ func ConversionTypeSimbolo(tiposSimbolo []string, tablaCorrespondencia map[strin
 	return valorReal
 }
 
-/* Function: ObtencionToken
+/*
+	 Function: ObtencionToken
 
-   Metodo que entrega el token y el id de este que se encuentra asociados a un lexema en particular
+	   Metodo que entrega el token y el id de este que se encuentra asociados a un lexema en particular
 
-   Parameters:
+	   Parameters:
 
-      lexema - string que contiene el simbolo al cual se le van a extrar sus elementos asociados
-	  tablatokens - mapa que tiene como llave un string con el token y como llave un array que tiene el id y lexema
+	      lexema - string que contiene el simbolo al cual se le van a extrar sus elementos asociados
+		  tablatokens - mapa que tiene como llave un string con el token y como llave un array que tiene el id y lexema
 
-   Returns:
+	   Returns:
 
-      	Un array con el token y el id unico de este.
-
+	      	Un array con el token y el id unico de este.
 */
 func ObtencionToken(lexema string, tablatokens map[string][]string) []string {
 	token, isPresent := tablatokens[lexema]
@@ -189,24 +190,25 @@ func ObtencionToken(lexema string, tablatokens map[string][]string) []string {
 	}
 }
 
-/* Function: ExistenciaToken
+/*
+	 Function: ExistenciaToken
 
-   Comprueba si un identificador ya fue inicializado anteriormente para asignarle su idToken asociado o si no se le genera uno nuevo.
+	   Comprueba si un identificador ya fue inicializado anteriormente para asignarle su idToken asociado o si no se le genera uno nuevo.
 
-   Parameters:
+	   Parameters:
 
-      lexema - string con el simbolo a considerar
-	  tablaTokens - tabla final de tokens que se genera luego de ejecutar el metodo Leer.
-	  lenTbTknGen - int que representa el tamano de la tabla de tokens generada.
+	      lexema - string con el simbolo a considerar
+		  tablaTokens - tabla final de tokens que se genera luego de ejecutar el metodo Leer.
+		  lenTbTknGen - int que representa el tamano de la tabla de tokens generada.
 
-   Returns:
+	   Returns:
 
-      	El string con el id asociado al idenfiticador o el id generado.
+	      	El string con el id asociado al idenfiticador o el id generado.
 
-   See Also:
+	   See Also:
 
-      <Leer>
-	  <generarId>
+	      <Leer>
+		  <generarId>
 */
 func ExistenciaToken(lexema string, tablaTokens []TablaTokens, lenTbTknGen int) string {
 	existe := false
@@ -225,36 +227,36 @@ func ExistenciaToken(lexema string, tablaTokens []TablaTokens, lenTbTknGen int) 
 	}
 }
 
-/* Function: generarId
+/*
+	 Function: generarId
 
-   Metodo que genera un id unico para un identificador nuevo.
+	   Metodo que genera un id unico para un identificador nuevo.
 
-   Parameters:
+	   Parameters:
 
-      tablaTokens - tabla final de tokens que se genera luego de ejecutar el metodo Leer.
-	  lenTbTknGen - int que representa el tamano de la tabla de tokens generada.
+	      tablaTokens - tabla final de tokens que se genera luego de ejecutar el metodo Leer.
+		  lenTbTknGen - int que representa el tamaño de la tabla de tokens generada.
 
-   Returns:
+	   Returns:
 
-      	El string con el id generado, sigue la logica de ser mayor que el tamano de la tabla de tokens generada, se le suma 1.
-
+	      	El string con el id generado, sigue la logica de ser mayor que el tamano de la tabla de tokens generada, se le suma 1.
 */
 func generarId(tablaTokens []TablaTokens, lenTbTknGen int) string {
 	return strconv.Itoa(len(tablaTokens) + lenTbTknGen)
 }
 
-/* Function: ContarLineas
+/*
+Function: ContarLineas
 
-   Metodo que cuenta las lineas del archivo de entrada.
+	Metodo que cuenta las lineas del archivo de entrada.
 
-   Parameters:
+	Parameters:
 
-      nombreArchivo - string con el nombre del archivo de entrada.
+	   nombreArchivo - string con el nombre del archivo de entrada.
 
-   Returns:
+	Returns:
 
-      	El int con el numero de lineas del archivo de entrada.
-
+	   	El int con el numero de lineas del archivo de entrada.
 */
 func ContadorLineas(nombreArchivo string) int {
 	archivo, err := os.Open(nombreArchivo)
