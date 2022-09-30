@@ -5,6 +5,8 @@ import (
 	#gol#
 	#hinchas#
 )
+const hola =@1+@1+
+var perro = )@3+@2)
 
 func main() {
 	const int hola = @14+@5*(@90/@1)/@1

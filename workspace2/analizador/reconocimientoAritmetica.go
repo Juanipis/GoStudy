@@ -37,7 +37,7 @@ Returns:
 */
 
 func filter(tabla [][]string, pos int, linea string) AritemticaStruct {
-	for {
+	for (pos < len(tabla)) && (tabla[pos][1] == linea) {
 		in := false
 		pos--
 		for i := 3; i < 6; i++ {
@@ -56,7 +56,7 @@ func filter(tabla [][]string, pos int, linea string) AritemticaStruct {
 	}
 	posI := tabla[pos][2]
 	var lineaCodigo string
-	for {
+	for (pos < len(tabla)) && (tabla[pos][1] == linea) {
 		in := false
 		for i := 3; i < 6; i++ {
 			if tabla[pos][i] == "Variable" || tabla[pos][i] == "Constante" || tabla[pos][i] == "Operador aritmetico" {
