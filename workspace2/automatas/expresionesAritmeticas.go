@@ -7,15 +7,39 @@ import (
 	"unicode"
 )
 
+// Variable: cadena
+// Expresión aritmetica a evaluar
 var cadena string
+
+// Variable: posicion
+// Posición en la cadena
 var posicion int
+
+// Variable: Token_Entrada
+// Token de entrada
 var Token_Entrada byte
+
+// Variable: Log
+// Log de errores
 var Log string
 
-/* Function: AutomataExpresiones
-Automata encargado de bñlblblbaba
-*/
+/*
+	 Function: AutomataExpresiones
+		Automata para aceptar cadenas de expresiones aritmeticas del lenguaje messi
 
+		Parameters:
+			cadenaIN - Cadena de entrada a evaluar
+
+		Returns:
+			received - Booleano que indica si la cadena es aceptada o no
+			Log - String con el log de errores
+
+		See Also:
+			<SiguienteToken>
+			<PrimerToken>
+			<expresion>
+			<seguirExpresion>
+*/
 func AutomataExpresiones(cadenaIN string) (bool, string) {
 	Log = ""
 	cadena = cadenaIN
@@ -42,6 +66,9 @@ func AutomataExpresiones(cadenaIN string) (bool, string) {
 	return received, Log
 }
 
+/*
+Function: seguirExpresion
+*/
 func seguirExpresion() {
 	expresion_prima()
 	if Token_Entrada == '*' || Token_Entrada == '/' || Token_Entrada == '%' || Token_Entrada == '^' {
