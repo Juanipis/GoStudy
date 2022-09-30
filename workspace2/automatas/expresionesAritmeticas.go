@@ -68,6 +68,14 @@ func AutomataExpresiones(cadenaIN string) (bool, string) {
 
 /*
 Function: seguirExpresion
+
+	Función que sigue analizando en caso de que encuentre un error y se recupere. Se utilizan las variables globales cadena, posicion, log y Token_Entrada
+
+	See Also:
+		<expresion_prima>
+		<termino_prima>
+		<SiguienteToken>
+		<seguirExpresion>
 */
 func seguirExpresion() {
 	expresion_prima()
@@ -85,11 +93,28 @@ func seguirExpresion() {
 	}
 }
 
+/*
+	 Function: PrimerToken
+		Función que obtiene el primer token de la cadena. Se utiliza la variable global cadena y posicion
+		Returns:
+			cadena[0] - Primer token de la cadena
+*/
 func PrimerToken() byte {
 	posicion = 1
 	return cadena[0]
 }
 
+/*
+	 Function: SiguienteToken
+		Función que obtiene el siguiente token de la cadena. Se utiliza la variable global cadena y posicion
+		Returns:
+			SiguienteToken() - Siguiente token de la cadena en caso de que exista un espacio en la expresión aritmética
+			cadena[posicion-1] - Siguiente token de la cadena en caso de que no exista un espacio en la expresión aritmética
+			; - Símbolo de fin de cadena
+
+		See Also:
+			<SiguienteToken>
+*/
 func SiguienteToken() byte {
 	if posicion < len(cadena) {
 		posicion = posicion + 1
@@ -104,6 +129,14 @@ func SiguienteToken() byte {
 	}
 }
 
+/*
+	 Function: HacerMatch
+		Función que verifica si el token de entrada es igual al token esperado. En caso de serlo, se obtiene el siguiente token de la cadena. Se utilizan las variables globales cadena, posicion, log y Token_Entrada
+		Parameters:
+			t - Token esperado
+		See Also:
+			<SiguienteToken>
+*/
 func HacerMatch(t byte) {
 	if t == Token_Entrada {
 		//Log = Log + ("Match: " + string(Token_Entrada) + " " + strconv.Itoa(posicion) + "\n")
@@ -113,6 +146,13 @@ func HacerMatch(t byte) {
 	}
 }
 
+/*
+	 Function: SiguienteTokenID
+		Función que obtiene el siguiente token de la cadena pero solo para los identificadores dado que no deberian tener espacios. Se utiliza la variable global cadena y posicion
+		Returns:
+			cadena[posicion-1] - Siguiente caracter del token de la expresión aritmética
+			; - Símbolo de fin de cadena
+*/
 func SiguienteTokenID() byte {
 	if posicion < len(cadena) {
 		posicion = posicion + 1
@@ -123,6 +163,14 @@ func SiguienteTokenID() byte {
 	}
 }
 
+/*
+	 Function: HacerMatchID
+		Función que verifica si el token de entrada es igual al token esperado. En caso de serlo, se obtiene el siguiente token de la cadena. Se utilizan las variables globales cadena, posicion, log y Token_Entrada
+		Parameters:
+			t - Token esperado
+		See Also:
+			<SiguienteTokenID>
+*/
 func HacerMatchID(t byte) {
 	if t == Token_Entrada {
 		//Log = Log + ("Match: " + string(Token_Entrada) + " " + strconv.Itoa(posicion) + "\n")
@@ -132,13 +180,28 @@ func HacerMatchID(t byte) {
 	}
 }
 
-// Funciones de automata
+//FUNCIONES DE LA GRAMATICA
 
+/*
+	 Function: expresion
+		Función que analiza la gramática de la expresión aritmética. Se utilizan las variables globales cadena, posicion, log y Token_Entrada
+		See Also:
+			<termino>
+			<expresion_prima>
+*/
 func expresion() {
 	termino()
 	expresion_prima()
 }
 
+/*
+	 Function: expresion_prima
+		Función que analiza la gramática de la expresión aritmética. Se utilizan las variables globales cadena, posicion, log y Token_Entrada
+		See Also:
+			<HacerMatch>
+			<termino>
+			<expresion_prima>
+*/
 func expresion_prima() {
 
 	if Token_Entrada == '+' {
@@ -154,11 +217,26 @@ func expresion_prima() {
 	}
 }
 
+/*
+	 Function: termino
+		Función que analiza la gramática de la expresión aritmética en la regla de producción de termino. Se utilizan las variables globales cadena, posicion, log y Token_Entrada
+		See Also:
+			<factor>
+			<termino_prima>
+*/
 func termino() {
 	factor()
 	termino_prima()
 }
 
+/*
+	 Function: termino_prima
+		Función que analiza la gramática de la expresión aritmética en la regla de producción de termino_prima. Se utilizan las variables globales cadena, posicion, log y Token_Entrada
+		See Also:
+			<HacerMatch>
+			<factor>
+			<termino_prima>
+*/
 func termino_prima() {
 	if Token_Entrada == '*' {
 		HacerMatch('*')
@@ -181,6 +259,20 @@ func termino_prima() {
 	}
 }
 
+/*
+	 Function: factor
+		Función que analiza la gramática de la expresión aritmética en la regla de producción de factor. Se utilizan las variables globales cadena, posicion, log y Token_Entrada
+		See Also:
+			<HacerMatch>
+			<expresion>
+			<SiguienteToken>
+			<expresion_prima>
+			<termino_prima>
+			<is_cov>
+			<is_letter>
+			<cov>
+			<numero>
+*/
 func factor() {
 	if Token_Entrada == '(' {
 		HacerMatch('(')
@@ -209,6 +301,13 @@ func factor() {
 	}
 }
 
+/*
+	 Function: cov
+		Función que analiza la gramática de la expresión aritmética en la regla de producción de cov. Se utilizan las variables globales cadena, posicion, log y Token_Entrada
+		See Also:
+			<HacerMatch>
+			<identificador>
+*/
 func cov() {
 	if Token_Entrada == '@' {
 		HacerMatch('@')
@@ -221,11 +320,27 @@ func cov() {
 	}
 }
 
+/*
+	 Function: identificador
+		Función que analiza la gramática de la expresión aritmética en la regla de producción de identificador. Se utilizan las variables globales cadena, posicion, log y Token_Entrada
+		See Also:
+			<letra>
+			<identificador_prima>
+*/
 func identificador() {
 	letra()
 	identificador_prima()
 }
 
+/*
+	 Function: identificador_prima
+		Función que analiza la gramática de la expresión aritmética en la regla de producción de identificador_prima. Se utilizan las variables globales cadena, posicion, log y Token_Entrada
+		See Also:
+			<is_letter>
+			<letra>
+			<identificador_prima>
+			<SiguienteToken>
+*/
 func identificador_prima() {
 	if is_letter(Token_Entrada) {
 		letra()
@@ -237,6 +352,13 @@ func identificador_prima() {
 	}
 }
 
+/*
+	 Function: letra
+		Función que analiza la gramática de la expresión aritmética en la regla de producción de letra. Se utilizan las variables globales cadena, posicion, log y Token_Entrada
+		See Also:
+			<is_letter>
+			<HacerMatchID>
+*/
 func letra() {
 	if is_letter(Token_Entrada) {
 		HacerMatchID(Token_Entrada)
@@ -245,11 +367,26 @@ func letra() {
 	}
 }
 
+/*
+	 Function: numero
+		Función que analiza la gramática de la expresión aritmética en la regla de producción de numero.
+		See Also:
+			<digito>
+			<numero_prima>
+*/
 func numero() {
 	digito()
 	numero_prima()
 }
 
+/*
+	 Function: numero_prima
+		Función que analiza la gramática de la expresión aritmética en la regla de producción de numero_prima.
+		See Also:
+			<is_digit>
+			<digito>
+			<numero_prima>
+*/
 func numero_prima() {
 	if is_digit(Token_Entrada) {
 		digito()
@@ -259,6 +396,13 @@ func numero_prima() {
 	}
 }
 
+/*
+	 Function: digito
+		Función que analiza la gramática de la expresión aritmética en la regla de producción de digito. Se utilizan las variables globales posicion, log y Token_Entrada
+		See Also:
+			<is_digit>
+			<HacerMatch>
+*/
 func digito() {
 	if is_digit(Token_Entrada) {
 		HacerMatch(Token_Entrada)
@@ -267,6 +411,15 @@ func digito() {
 	}
 }
 
+/*
+	 Function: is_digit
+		Función que verifica si el caracter es un digito
+		Parameters:
+			tokenEntrada - Caracter a verificar
+		Returns:
+			true - si el caracter es un digito
+			false - en caso contrario
+*/
 func is_digit(tokenEntrada byte) bool {
 	if tokenEntrada == '0' || tokenEntrada == '1' || tokenEntrada == '2' || tokenEntrada == '3' || tokenEntrada == '4' || tokenEntrada == '5' || tokenEntrada == '6' || tokenEntrada == '7' || tokenEntrada == '8' || tokenEntrada == '9' {
 		return true
@@ -275,6 +428,15 @@ func is_digit(tokenEntrada byte) bool {
 	}
 }
 
+/*
+	 Function: is_cov
+		Función que verifica si el caracter es una constante o variable
+		Parameters:
+			tokenEntrada - Caracter a verificar
+		Returns:
+			true - si el caracter es una constante o variable
+			false - en caso contrario
+*/
 func is_cov(tokenEntrada byte) bool {
 	if tokenEntrada == '@' || tokenEntrada == '$' {
 		return true
@@ -283,6 +445,15 @@ func is_cov(tokenEntrada byte) bool {
 	}
 }
 
+/*
+	 Function: is_letter
+		Función que verifica si el caracter es una letra
+		Parameters:
+			tokenEntrada - Caracter a verificar
+		Returns:
+			true - si el caracter es una letra
+			false - en caso contrario
+*/
 func is_letter(tokenEntrada byte) bool {
 	if unicode.IsLetter(rune(tokenEntrada)) {
 		return true
