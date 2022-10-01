@@ -298,6 +298,8 @@ func factor() {
 			HacerMatch('@')
 			numero()
 		}
+	} else {
+		Log = Log + ("Error: Se esperaba un termino en la posición:" + strconv.Itoa(posicion) + "\n")
 	}
 }
 
