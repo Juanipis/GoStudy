@@ -236,7 +236,22 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
         builder: (context) {
           return AlertDialog(
             title: Text("Resultado: $acept"),
-            content: Text(decoded["log"]),
+            content: SizedBox(
+              height: 500,
+              child: Column(
+                children: [
+                  Text(decoded["log"]),
+                  ExpansionTile(
+                    title: const Text("Prefijo"),
+                    children: [Text(decoded["preFija"])],
+                  ),
+                  ExpansionTile(
+                    title: const Text("Posfijo"),
+                    children: [Text(decoded["postFija"])],
+                  ),
+                ],
+              ),
+            ),
             actions: [
               TextButton(
                   onPressed: (() => navState.pop()), child: const Text("Salir"))

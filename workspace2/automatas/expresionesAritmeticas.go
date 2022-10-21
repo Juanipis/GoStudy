@@ -210,14 +210,16 @@ func expresion() {
 func expresion_prima() {
 
 	if Token_Entrada == '+' {
-		HacerMatch('+')
 		preFija = preFija + "+"
+		HacerMatch('+')
+
 		termino()
 		expresion_prima()
 		postFija = postFija + "+"
 	} else if Token_Entrada == '-' {
-		HacerMatch('-')
 		preFija = preFija + "-"
+		HacerMatch('-')
+
 		termino()
 		expresion_prima()
 		postFija = postFija + "-"
@@ -248,27 +250,35 @@ func termino() {
 */
 func termino_prima() {
 	if Token_Entrada == '*' {
-		HacerMatch('*')
 		preFija = preFija + "*"
+		HacerMatch('*')
+
 		factor()
+
 		termino_prima()
 		postFija = postFija + "*"
 	} else if Token_Entrada == '/' {
-		HacerMatch('/')
 		preFija = preFija + "/"
+		HacerMatch('/')
+
 		factor()
+
 		termino_prima()
 		postFija = postFija + "/"
 	} else if Token_Entrada == '%' {
-		HacerMatch('%')
 		preFija = preFija + "%"
+		HacerMatch('%')
+
 		factor()
+
 		termino_prima()
 		postFija = postFija + "%"
 	} else if Token_Entrada == '^' {
-		HacerMatch('^')
 		preFija = preFija + "^"
+		HacerMatch('^')
+
 		factor()
+
 		termino_prima()
 		postFija = postFija + "^"
 	} else {
@@ -312,6 +322,8 @@ func factor() {
 		if is_letter(cadena[posicion]) {
 			cov()
 		} else if is_digit(cadena[posicion]) {
+			preFija = preFija + string(Token_Entrada)
+			postFija = postFija + string(Token_Entrada)
 			HacerMatch('@')
 			numero()
 		}
@@ -424,6 +436,8 @@ func numero_prima() {
 */
 func digito() {
 	if is_digit(Token_Entrada) {
+		preFija = preFija + string(Token_Entrada)
+		postFija += string(Token_Entrada)
 		HacerMatch(Token_Entrada)
 	} else {
 		Log = Log + ("Error: Se esperaba un digito, variable o constante en la posición:" + strconv.Itoa(posicion) + "\n")
