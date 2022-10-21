@@ -111,8 +111,8 @@ func AnalizarExpresionAritmetica(w http.ResponseWriter, r *http.Request) {
 	var newExp analizador.ExprAritmetica
 	json.Unmarshal(reqBody, &newExp)
 	fmt.Println(newExp)
-	result, log := automatas.AutomataExpresiones(newExp.Exp)
-	arit := analizador.ResultAritmetica{Result: result, Log: log}
+	result, log, preFija, postFija := automatas.AutomataExpresiones(newExp.Exp)
+	arit := analizador.ResultAritmetica{Result: result, Log: log, PreFija: preFija, PostFija: postFija}
 	json.NewEncoder(w).Encode(arit)
 
 }

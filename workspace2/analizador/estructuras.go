@@ -27,7 +27,9 @@ type ResultAritmetica struct {
 	Result bool `json:"result"`
 	// Variable: Log
 	// El log de la expresion aritmetica, contiene los errores que se hayan encontrado y los match que se hayan hecho
-	Log string `json:"log"`
+	Log      string `json:"log"`
+	PreFija  string `json:"preFija"`
+	PostFija string `json:"postFija"`
 }
 
 // Class: TablaTokens

@@ -23,6 +23,9 @@ var Token_Entrada byte
 // Log de errores
 var Log string
 
+var preFija string
+var postFija string
+
 /*
 	 Function: AutomataExpresiones
 		Automata para aceptar cadenas de expresiones aritmeticas del lenguaje messi
@@ -40,10 +43,12 @@ var Log string
 			<expresion>
 			<seguirExpresion>
 */
-func AutomataExpresiones(cadenaIN string) (bool, string) {
+func AutomataExpresiones(cadenaIN string) (bool, string, string, string) {
 	Log = ""
 	cadena = cadenaIN
 	Token_Entrada = PrimerToken()
+	preFija = ""
+	postFija = ""
 
 	expresion()
 	if Token_Entrada != ';' {
@@ -63,7 +68,7 @@ func AutomataExpresiones(cadenaIN string) (bool, string) {
 		received = true
 	}
 
-	return received, Log
+	return received, Log, preFija, postFija
 }
 
 /*
@@ -206,12 +211,16 @@ func expresion_prima() {
 
 	if Token_Entrada == '+' {
 		HacerMatch('+')
+		preFija = preFija + "+"
 		termino()
 		expresion_prima()
+		postFija = postFija + "+"
 	} else if Token_Entrada == '-' {
 		HacerMatch('-')
+		preFija = preFija + "-"
 		termino()
 		expresion_prima()
+		postFija = postFija + "-"
 	} else {
 		//epsilon
 	}
@@ -240,20 +249,28 @@ func termino() {
 func termino_prima() {
 	if Token_Entrada == '*' {
 		HacerMatch('*')
+		preFija = preFija + "*"
 		factor()
 		termino_prima()
+		postFija = postFija + "*"
 	} else if Token_Entrada == '/' {
 		HacerMatch('/')
+		preFija = preFija + "/"
 		factor()
 		termino_prima()
+		postFija = postFija + "/"
 	} else if Token_Entrada == '%' {
 		HacerMatch('%')
+		preFija = preFija + "%"
 		factor()
 		termino_prima()
+		postFija = postFija + "%"
 	} else if Token_Entrada == '^' {
 		HacerMatch('^')
+		preFija = preFija + "^"
 		factor()
 		termino_prima()
+		postFija = postFija + "^"
 	} else {
 		//epsilon
 	}
