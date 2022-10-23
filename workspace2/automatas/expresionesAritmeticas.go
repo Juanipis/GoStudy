@@ -34,6 +34,7 @@ var notacionTemporal string
 var elemento1 string
 var elemento2 string
 var elementoPrefijo string
+var errorPrefixInfix bool
 
 /*
 	 Function: AutomataExpresiones
@@ -54,6 +55,7 @@ var elementoPrefijo string
 */
 func AutomataExpresiones(cadenaIN string) (bool, string, string, string) {
 	pila.Pila = estructurasdatos.Stack[string]()
+	errorPrefixInfix = false
 	elemento1 = ""
 	elemento2 = ""
 	Log = ""
@@ -64,6 +66,7 @@ func AutomataExpresiones(cadenaIN string) (bool, string, string, string) {
 	notacionTemporal = ""
 	expresion()
 	if Token_Entrada != ';' {
+		errorPrefixInfix = true
 		if Token_Entrada == ')' {
 			Log = Log + ("Error: Hace falta '(' en algun lugar\n")
 		} else {
@@ -79,7 +82,12 @@ func AutomataExpresiones(cadenaIN string) (bool, string, string, string) {
 	} else {
 		received = true
 	}
-	preFija = pila.Pila.Head()
+	if !errorPrefixInfix {
+		preFija = pila.Pila.Head()
+	} else {
+		preFija = "Error en la expresión"
+		postFija = "Error en la expresión"
+	}
 	return received, Log, preFija, postFija
 }
 
@@ -100,6 +108,7 @@ func seguirExpresion() {
 		termino_prima()
 	}
 	if Token_Entrada != ';' {
+		errorPrefixInfix = true
 		if Token_Entrada == ')' {
 			Log = Log + ("Error: Hace falta '(' en algun lugar\n")
 		} else {
@@ -159,6 +168,7 @@ func HacerMatch(t byte) {
 		//Log = Log + ("Match: " + string(Token_Entrada) + " " + strconv.Itoa(posicion) + "\n")
 		Token_Entrada = SiguienteToken()
 	} else {
+		errorPrefixInfix = true
 		Log = Log + ("error\n")
 	}
 }
@@ -193,6 +203,7 @@ func HacerMatchID(t byte) {
 		//Log = Log + ("Match: " + string(Token_Entrada) + " " + strconv.Itoa(posicion) + "\n")
 		Token_Entrada = SiguienteTokenID()
 	} else {
+		errorPrefixInfix = true
 		Log = Log + ("error\n")
 	}
 }
@@ -222,30 +233,22 @@ func expresion() {
 func expresion_prima() {
 
 	if Token_Entrada == '+' {
-		preFija = preFija + "+"
 		HacerMatch('+')
 
 		termino()
 
 		//Lo de la pila
-		elemento2 = pila.Pila.Pop()
-		elemento1 = pila.Pila.Pop()
-		elementoPrefijo = "+" + elemento1 + elemento2
-		pila.Pila.Push(elementoPrefijo)
+		appendPrefijo("+")
 		//Fin de lo de la pila
 
 		expresion_prima()
 		postFija = postFija + "+"
 	} else if Token_Entrada == '-' {
-		preFija = preFija + "-"
 		HacerMatch('-')
 		termino()
 
 		//Lo de la pila
-		elemento2 = pila.Pila.Pop()
-		elemento1 = pila.Pila.Pop()
-		elementoPrefijo = "-" + elemento1 + elemento2
-		pila.Pila.Push(elementoPrefijo)
+		appendPrefijo("-")
 		//Fin de lo de la pila
 
 		expresion_prima()
@@ -278,57 +281,41 @@ func termino() {
 func termino_prima() {
 	if Token_Entrada == '*' {
 
-		preFija = preFija + "*"
 		HacerMatch('*')
 		factor()
 
 		//Lo de la pila
-		elemento2 = pila.Pila.Pop()
-		elemento1 = pila.Pila.Pop()
-		elementoPrefijo = "*" + elemento1 + elemento2
-		pila.Pila.Push(elementoPrefijo)
+		appendPrefijo("*")
 		//Fin de lo de la pila
 
 		termino_prima()
 		postFija = postFija + "*"
 	} else if Token_Entrada == '/' {
-		preFija = preFija + "/"
 		HacerMatch('/')
 		factor()
 
 		//Lo de la pila
-		elemento2 = pila.Pila.Pop()
-		elemento1 = pila.Pila.Pop()
-		elementoPrefijo = "/" + elemento1 + elemento2
-		pila.Pila.Push(elementoPrefijo)
+		appendPrefijo("/")
 		//Fin de lo de la pila
 
 		termino_prima()
 		postFija = postFija + "/"
 	} else if Token_Entrada == '%' {
-		preFija = preFija + "%"
 		HacerMatch('%')
 		factor()
 
 		//Lo de la pila
-		elemento2 = pila.Pila.Pop()
-		elemento1 = pila.Pila.Pop()
-		elementoPrefijo = "%" + elemento1 + elemento2
-		pila.Pila.Push(elementoPrefijo)
+		appendPrefijo("%")
 		//Fin de lo de la pila
 
 		termino_prima()
 		postFija = postFija + "%"
 	} else if Token_Entrada == '^' {
-		preFija = preFija + "^"
 		HacerMatch('^')
 		factor()
 
 		//Lo de la pila
-		elemento2 = pila.Pila.Pop()
-		elemento1 = pila.Pila.Pop()
-		elementoPrefijo = "^" + elemento1 + elemento2
-		pila.Pila.Push(elementoPrefijo)
+		appendPrefijo("^")
 		//Fin de lo de la pila
 
 		termino_prima()
@@ -358,6 +345,7 @@ func factor() {
 		expresion()
 		if unicode.IsLetter(rune(Token_Entrada)) {
 			Log = Log + ("Error: Syntax: " + string(Token_Entrada) + " en la posición " + strconv.Itoa(posicion) + "\n")
+			errorPrefixInfix = true
 			Token_Entrada = SiguienteToken()
 			expresion_prima()
 			if Token_Entrada == '*' || Token_Entrada == '/' || Token_Entrada == '%' || Token_Entrada == '^' {
@@ -367,6 +355,7 @@ func factor() {
 		if Token_Entrada == ')' {
 			HacerMatch(')')
 		} else {
+			errorPrefixInfix = true
 			Log = Log + ("Error: Se esperaba un ')' en la posición:" + strconv.Itoa(posicion) + "\n")
 			Token_Entrada = SiguienteToken()
 		}
@@ -376,7 +365,6 @@ func factor() {
 			pila.Pila.Push(notacionTemporal)
 			notacionTemporal = ""
 		} else if is_digit(cadena[posicion]) {
-			preFija = preFija + string(Token_Entrada)
 			postFija = postFija + string(Token_Entrada)
 
 			notacionTemporal += string("@")
@@ -386,6 +374,7 @@ func factor() {
 			notacionTemporal = ""
 		}
 	} else {
+		errorPrefixInfix = true
 		Log = Log + ("Error: Se esperaba un termino en la posición:" + strconv.Itoa(posicion) + "\n")
 	}
 }
@@ -409,6 +398,7 @@ func cov() {
 		postFija = postFija + "$"
 		identificador()
 	} else {
+		errorPrefixInfix = true
 		Log = Log + ("Error: Se esperaba una variable o constante en la posición:" + strconv.Itoa(posicion) + "\n")
 	}
 }
@@ -458,6 +448,7 @@ func letra() {
 		postFija = postFija + string(Token_Entrada)
 		HacerMatchID(Token_Entrada)
 	} else {
+		errorPrefixInfix = true
 		Log = Log + ("Error: Se esperaba una letra en la posición:" + strconv.Itoa(posicion) + "\n")
 	}
 }
@@ -500,11 +491,11 @@ func numero_prima() {
 */
 func digito() {
 	if is_digit(Token_Entrada) {
-		preFija = preFija + string(Token_Entrada)
 		postFija += string(Token_Entrada)
 		notacionTemporal += string(Token_Entrada)
 		HacerMatch(Token_Entrada)
 	} else {
+		errorPrefixInfix = true
 		Log = Log + ("Error: Se esperaba un digito, variable o constante en la posición:" + strconv.Itoa(posicion) + "\n")
 	}
 }
@@ -557,5 +548,14 @@ func is_letter(tokenEntrada byte) bool {
 		return true
 	} else {
 		return false
+	}
+}
+
+func appendPrefijo(simbolo string) {
+	if !errorPrefixInfix {
+		elemento2 = pila.Pila.Pop()
+		elemento1 = pila.Pila.Pop()
+		elementoPrefijo = simbolo + elemento1 + elemento2
+		pila.Pila.Push(elementoPrefijo)
 	}
 }
