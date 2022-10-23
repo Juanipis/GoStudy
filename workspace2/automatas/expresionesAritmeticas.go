@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
+	estructurasdatos "workspace2/estructuras_datos"
 )
 
 // Variable: cadena
@@ -26,6 +27,14 @@ var Log string
 var preFija string
 var postFija string
 
+var pila estructurasdatos.PilaString
+
+var notacionTemporal string
+
+var elemento1 string
+var elemento2 string
+var elementoPrefijo string
+
 /*
 	 Function: AutomataExpresiones
 		Automata para aceptar cadenas de expresiones aritmeticas del lenguaje messi
@@ -44,12 +53,15 @@ var postFija string
 			<seguirExpresion>
 */
 func AutomataExpresiones(cadenaIN string) (bool, string, string, string) {
+	pila.Pila = estructurasdatos.Stack[string]()
+	elemento1 = ""
+	elemento2 = ""
 	Log = ""
 	cadena = cadenaIN
 	Token_Entrada = PrimerToken()
 	preFija = ""
 	postFija = ""
-
+	notacionTemporal = ""
 	expresion()
 	if Token_Entrada != ';' {
 		if Token_Entrada == ')' {
@@ -67,7 +79,7 @@ func AutomataExpresiones(cadenaIN string) (bool, string, string, string) {
 	} else {
 		received = true
 	}
-
+	preFija = pila.Pila.Head()
 	return received, Log, preFija, postFija
 }
 
@@ -214,13 +226,28 @@ func expresion_prima() {
 		HacerMatch('+')
 
 		termino()
+
+		//Lo de la pila
+		elemento2 = pila.Pila.Pop()
+		elemento1 = pila.Pila.Pop()
+		elementoPrefijo = "+" + elemento1 + elemento2
+		pila.Pila.Push(elementoPrefijo)
+		//Fin de lo de la pila
+
 		expresion_prima()
 		postFija = postFija + "+"
 	} else if Token_Entrada == '-' {
 		preFija = preFija + "-"
 		HacerMatch('-')
-
 		termino()
+
+		//Lo de la pila
+		elemento2 = pila.Pila.Pop()
+		elemento1 = pila.Pila.Pop()
+		elementoPrefijo = "-" + elemento1 + elemento2
+		pila.Pila.Push(elementoPrefijo)
+		//Fin de lo de la pila
+
 		expresion_prima()
 		postFija = postFija + "-"
 	} else {
@@ -250,34 +277,59 @@ func termino() {
 */
 func termino_prima() {
 	if Token_Entrada == '*' {
+
 		preFija = preFija + "*"
 		HacerMatch('*')
-
 		factor()
+
+		//Lo de la pila
+		elemento2 = pila.Pila.Pop()
+		elemento1 = pila.Pila.Pop()
+		elementoPrefijo = "*" + elemento1 + elemento2
+		pila.Pila.Push(elementoPrefijo)
+		//Fin de lo de la pila
 
 		termino_prima()
 		postFija = postFija + "*"
 	} else if Token_Entrada == '/' {
 		preFija = preFija + "/"
 		HacerMatch('/')
-
 		factor()
+
+		//Lo de la pila
+		elemento2 = pila.Pila.Pop()
+		elemento1 = pila.Pila.Pop()
+		elementoPrefijo = "/" + elemento1 + elemento2
+		pila.Pila.Push(elementoPrefijo)
+		//Fin de lo de la pila
 
 		termino_prima()
 		postFija = postFija + "/"
 	} else if Token_Entrada == '%' {
 		preFija = preFija + "%"
 		HacerMatch('%')
-
 		factor()
+
+		//Lo de la pila
+		elemento2 = pila.Pila.Pop()
+		elemento1 = pila.Pila.Pop()
+		elementoPrefijo = "%" + elemento1 + elemento2
+		pila.Pila.Push(elementoPrefijo)
+		//Fin de lo de la pila
 
 		termino_prima()
 		postFija = postFija + "%"
 	} else if Token_Entrada == '^' {
 		preFija = preFija + "^"
 		HacerMatch('^')
-
 		factor()
+
+		//Lo de la pila
+		elemento2 = pila.Pila.Pop()
+		elemento1 = pila.Pila.Pop()
+		elementoPrefijo = "^" + elemento1 + elemento2
+		pila.Pila.Push(elementoPrefijo)
+		//Fin de lo de la pila
 
 		termino_prima()
 		postFija = postFija + "^"
@@ -321,11 +373,17 @@ func factor() {
 	} else if is_cov(Token_Entrada) {
 		if is_letter(cadena[posicion]) {
 			cov()
+			pila.Pila.Push(notacionTemporal)
+			notacionTemporal = ""
 		} else if is_digit(cadena[posicion]) {
 			preFija = preFija + string(Token_Entrada)
 			postFija = postFija + string(Token_Entrada)
+
+			notacionTemporal += string("@")
 			HacerMatch('@')
 			numero()
+			pila.Pila.Push(notacionTemporal)
+			notacionTemporal = ""
 		}
 	} else {
 		Log = Log + ("Error: Se esperaba un termino en la posición:" + strconv.Itoa(posicion) + "\n")
@@ -342,9 +400,13 @@ func factor() {
 func cov() {
 	if Token_Entrada == '@' {
 		HacerMatch('@')
+		notacionTemporal += "@"
+		postFija = postFija + "@"
 		identificador()
 	} else if Token_Entrada == '$' {
 		HacerMatch('$')
+		notacionTemporal += "$"
+		postFija = postFija + "$"
 		identificador()
 	} else {
 		Log = Log + ("Error: Se esperaba una variable o constante en la posición:" + strconv.Itoa(posicion) + "\n")
@@ -392,6 +454,8 @@ func identificador_prima() {
 */
 func letra() {
 	if is_letter(Token_Entrada) {
+		notacionTemporal += string(Token_Entrada)
+		postFija = postFija + string(Token_Entrada)
 		HacerMatchID(Token_Entrada)
 	} else {
 		Log = Log + ("Error: Se esperaba una letra en la posición:" + strconv.Itoa(posicion) + "\n")
@@ -438,6 +502,7 @@ func digito() {
 	if is_digit(Token_Entrada) {
 		preFija = preFija + string(Token_Entrada)
 		postFija += string(Token_Entrada)
+		notacionTemporal += string(Token_Entrada)
 		HacerMatch(Token_Entrada)
 	} else {
 		Log = Log + ("Error: Se esperaba un digito, variable o constante en la posición:" + strconv.Itoa(posicion) + "\n")

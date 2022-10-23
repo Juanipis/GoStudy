@@ -1,5 +1,9 @@
 package estructurasdatos
 
+type PilaString struct {
+	Pila stack[string]
+}
+
 type stack[T any] struct {
 	Push   func(T)
 	Pop    func() T
