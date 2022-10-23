@@ -237,27 +237,56 @@ class _HomeAnalizadorState extends State<HomeAnalizador> {
           return AlertDialog(
             title: Text("Resultado: $acept"),
             content: SizedBox(
-              height: 500,
-              child: Column(
+              height: 200,
+              width: 400,
+              child: ListView(
                 children: [
-                  Text(decoded["log"]),
+                  logContainer(decoded),
                   ExpansionTile(
                     title: const Text("Prefijo"),
                     children: [Text(decoded["preFija"])],
                   ),
                   ExpansionTile(
                     title: const Text("Posfijo"),
-                    children: [Text(decoded["postFija"])],
+                    children: [
+                      Text(
+                        decoded["postFija"],
+                      )
+                    ],
                   ),
                 ],
               ),
             ),
             actions: [
               TextButton(
-                  onPressed: (() => navState.pop()), child: const Text("Salir"))
+                  onPressed: (() => navState.pop()),
+                  child: const Text(
+                    "Salir",
+                    style: TextStyle(color: Colors.red),
+                  ))
             ],
           );
         });
+  }
+
+  Container logContainer(Map<String, dynamic> decoded) {
+    String log = decoded["log"];
+    if (log.isNotEmpty) {
+      return Container(
+        width: 300,
+        height: 100,
+        decoration: const BoxDecoration(
+            border: Border(bottom: BorderSide(color: Colors.blue, width: 1))),
+        child: Column(children: [
+          Expanded(
+              child: SingleChildScrollView(
+            child: Text(decoded["log"]),
+          ))
+        ]),
+      );
+    } else {
+      return Container();
+    }
   }
 }
 
